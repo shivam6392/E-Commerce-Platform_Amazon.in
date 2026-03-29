@@ -417,8 +417,9 @@ const ProductDetail: React.FC = () => {
               </div>
             )}
 
-            {/* Cart success message */}
-            <div className="bb-added"><CheckCircle size={14} /> Added to Cart!</div>
+            {cartState === 'added' && (
+              <div className="bb-added"><CheckCircle size={14} /> Added to Cart!</div>
+            )}
 
             {/* Action Buttons */}
             <button
