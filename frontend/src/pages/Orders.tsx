@@ -14,6 +14,14 @@ const Orders: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const formatOrderId = (id: number) => {
+    const hash = id * 314159;
+    const p1 = 400 + (id % 100);
+    const p2 = String(hash % 9999999).padStart(7, '0');
+    const p3 = String((hash * 7) % 9999999).padStart(7, '0');
+    return `${p1}-${p2}-${p3}`;
+  };
+
   const formatPrice = (p: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
 
@@ -48,7 +56,7 @@ const Orders: React.FC = () => {
                   <div className="order-status-badge">{order.status}</div>
                 </div>
                 <div className="order-id-section">
-                  <span className="oh-label">ORDER # {String(order.id).padStart(10, '0')}</span>
+                  <span className="oh-label">ORDER # {formatOrderId(order.id)}</span>
                   <Link to={`/order-confirmation/${order.id}`} className="view-order-link">View order details</Link>
                 </div>
               </div>
