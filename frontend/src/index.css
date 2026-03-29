@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', 'Amazon Ember', Arial, sans-serif;
+  background-color: #eaeded;
+  color: #0f1111;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+#root { display: flex; flex-direction: column; min-height: 100vh; }
+
+main { flex: 1; }
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; }
+
+button { font-family: inherit; }
+
+input, select { font-family: inherit; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #a88734; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #e6af2e; }
+
+/* Utility */
+.text-center { text-align: center; }
+.page-container { max-width: 1400px; margin: 0 auto; padding: 0 16px; }
