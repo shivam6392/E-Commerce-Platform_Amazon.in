@@ -33,7 +33,7 @@ export const addToCart = (productId: number, quantity = 1) =>
 export const updateCartItem = (itemId: number, quantity: number) =>
     API.put(`/cart/items/${itemId}`, { quantity });
 
-export const removeCartItem = (id: number) => API.delete(`/cart/${id}`);
+export const removeCartItem = (id: number) => API.delete(`/cart/items/${id}`);
 
 // Auth
 export const login = (data: any) => API.post('/auth/login', data);
