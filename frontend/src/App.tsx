@@ -18,31 +18,31 @@ import { WishlistProvider } from './context/WishlistContext';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 
-// Render Server Wake Overlay
-const RenderWakeOverlay: React.FC = () => {
-  const [visible, setVisible] = React.useState(true);
-  const [status, setStatus] = React.useState<'idle' | 'activating' | 'success'>('idle');
+// Render Server Wake Overlay — hidden for 15 minutes after activation
+const WAKE_KEY = 'render_awake_until';
+const FIFTEEN_MIN = 15 * 60 * 1000;
 
-  // If already dismissed previously in this session
-  React.useEffect(() => {
-    if (sessionStorage.getItem('render_awake')) setVisible(false);
-  }, []);
+const RenderWakeOverlay: React.FC = () => {
+  const [visible, setVisible] = React.useState(() => {
+    const expiresAt = localStorage.getItem(WAKE_KEY);
+    if (expiresAt && Date.now() < Number(expiresAt)) return false;
+    localStorage.removeItem(WAKE_KEY);
+    return true;
+  });
+  const [status, setStatus] = React.useState<'idle' | 'activating' | 'success'>('idle');
 
   const handleActivate = async () => {
     setStatus('activating');
     try {
       const BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api` : '/api';
-      // Ping the products API just to wake up the server
       await axios.get(`${BASE}/products`);
       setStatus('success');
-      sessionStorage.setItem('render_awake', 'true');
-      setTimeout(() => setVisible(false), 1500);
     } catch (e) {
-      // If it fails, we still dismiss it so they aren't permanently locked out
       setStatus('success');
-      sessionStorage.setItem('render_awake', 'true');
-      setTimeout(() => setVisible(false), 1500);
     }
+    // Store expiry timestamp — overlay stays hidden for 15 minutes
+    localStorage.setItem(WAKE_KEY, String(Date.now() + FIFTEEN_MIN));
+    setTimeout(() => setVisible(false), 1500);
   };
 
   if (!visible) return null;
@@ -55,8 +55,8 @@ const RenderWakeOverlay: React.FC = () => {
           This project's backend is hosted on Render's free tier, which goes to sleep after 15 minutes of inactivity.
         </p>
         <p>Please click below to wake the server up for the optimal Amazon Clone experience!</p>
-        <a 
-          className="render-btn" 
+        <a
+          className="render-btn"
           href="https://amazon-clone-backend-kpl5.onrender.com"
           target="_blank"
           rel="noreferrer"
