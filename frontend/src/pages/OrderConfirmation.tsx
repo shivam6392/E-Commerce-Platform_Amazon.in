@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getOrder } from '../api';
+import { CheckCircle } from 'lucide-react';
 import type { Order } from '../types';
 import './OrderConfirmation.css';
 
@@ -36,7 +37,7 @@ const OrderConfirmation: React.FC = () => {
   return (
     <div className="conf-page">
       <div className="conf-card">
-        <div className="conf-check">✅</div>
+        <div className="conf-check"><CheckCircle size={64} color="#007600" /></div>
         <h1 className="conf-title">Order Placed, Thanks!</h1>
         <p className="conf-sub">
           Confirmation will be sent to your account. Your estimated delivery date is shown below.
