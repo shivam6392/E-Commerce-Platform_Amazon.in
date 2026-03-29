@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import productRoutes from './routes/products';
 import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
+import { autoSeedIfEmpty } from './autoSeed';
+
 
 dotenv.config();
 
@@ -37,6 +39,11 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// Auto-seed on startup (free tier friendly — no Shell access needed)
+(async () => {
+    await autoSeedIfEmpty();
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+})();
+
