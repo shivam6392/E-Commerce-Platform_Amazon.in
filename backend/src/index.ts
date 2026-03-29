@@ -141,6 +141,22 @@ app.use('/api/wishlist', wishlistRoutes);
         console.error('❌ Migration failed:', err);
     }
 
+    // Fix broken images in live DB
+    try {
+        const { prisma } = require('./db');
+        await prisma.product.updateMany({
+            where: { name: 'LEGO Technic 42096 Porsche 911 RSR Building Kit' },
+            data: { imageUrls: ['https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=600'] }
+        });
+        await prisma.product.updateMany({
+            where: { name: 'LG 55 Inch 4K OLED Smart TV (2023 Model)' },
+            data: { imageUrls: ['https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600'] }
+        });
+        console.log('✅ Applied live image patches for broken products.');
+    } catch (err) {
+        console.error('⚠️ Image patch failed:', err);
+    }
+
     await autoSeedIfEmpty();
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
