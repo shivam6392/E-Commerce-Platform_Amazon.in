@@ -12,10 +12,10 @@ import Orders from './pages/Orders';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Wishlist from './pages/Wishlist';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { WishlistProvider } from './context/WishlistContext';
 
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 // Render Server Wake Overlay — hidden for 15 minutes after activation
@@ -72,6 +72,7 @@ const RenderWakeOverlay: React.FC = () => {
 
 // Wrapper to handle header search
 const AppRoutes: React.FC = () => {
+  const { user, loading } = useAuth();
   const [, setSearchParams] = useSearchParams();
 
   const handleSearch = (query: string, category: string) => {
@@ -80,6 +81,8 @@ const AppRoutes: React.FC = () => {
     if (category && category !== 'All') params.category = category;
     setSearchParams(params);
   };
+
+  if (loading) return null;
 
   return (
     <>
@@ -90,14 +93,13 @@ const AppRoutes: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/checkout" element={user ? <Checkout /> : <Navigate to="/login" />} />
+          <Route path="/order-confirmation/:id" element={user ? <OrderConfirmation /> : <Navigate to="/login" />} />
+          <Route path="/orders" element={user ? <Orders /> : <Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/wishlist" element={user ? <Wishlist /> : <Navigate to="/login" />} />
         </Routes>
-
       </main>
       <Footer />
     </>
@@ -116,7 +118,6 @@ const App: React.FC = () => {
       </AuthProvider>
     </BrowserRouter>
   );
-
 };
 
 export default App;
