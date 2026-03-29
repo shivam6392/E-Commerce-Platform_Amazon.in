@@ -15,6 +15,56 @@ import Wishlist from './pages/Wishlist';
 import { AuthProvider } from './context/AuthContext';
 
 import { useSearchParams } from 'react-router-dom';
+import axios from 'axios';
+
+// Render Server Wake Overlay
+const RenderWakeOverlay: React.FC = () => {
+  const [visible, setVisible] = React.useState(true);
+  const [status, setStatus] = React.useState<'idle' | 'activating' | 'success'>('idle');
+
+  // If already dismissed previously in this session
+  React.useEffect(() => {
+    if (sessionStorage.getItem('render_awake')) setVisible(false);
+  }, []);
+
+  const handleActivate = async () => {
+    setStatus('activating');
+    try {
+      const BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api` : '/api';
+      // Ping the products API just to wake up the server
+      await axios.get(`${BASE}/products`);
+      setStatus('success');
+      sessionStorage.setItem('render_awake', 'true');
+      setTimeout(() => setVisible(false), 1500);
+    } catch (e) {
+      // If it fails, we still dismiss it so they aren't permanently locked out
+      setStatus('success');
+      sessionStorage.setItem('render_awake', 'true');
+      setTimeout(() => setVisible(false), 1500);
+    }
+  };
+
+  if (!visible) return null;
+
+  return (
+    <div className="render-overlay">
+      <div className="render-box">
+        <h3>🚀 Activate Server</h3>
+        <p>
+          This project's backend is hosted on Render's free tier, which goes to sleep after 15 minutes of inactivity.
+        </p>
+        <p>Please click below to wake the server up for the optimal Amazon Clone experience!</p>
+        <button 
+          className="render-btn" 
+          onClick={handleActivate}
+          disabled={status !== 'idle'}
+        >
+          {status === 'idle' ? 'Activate Full Experience' : status === 'activating' ? 'Waking up server (~40s)...' : '✔ Server Active'}
+        </button>
+      </div>
+    </div>
+  );
+};
 
 // Wrapper to handle header search
 const AppRoutes: React.FC = () => {
@@ -30,6 +80,7 @@ const AppRoutes: React.FC = () => {
   return (
     <>
       <Header onSearch={handleSearch} />
+      <RenderWakeOverlay />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
