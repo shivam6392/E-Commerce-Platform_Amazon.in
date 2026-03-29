@@ -60,8 +60,10 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             <div className="header-top">
                 {/* Logo */}
                 <Link to="/" className="header-logo" aria-label="Amazon Home">
-                    <div className="logo-text">amazon</div>
-                    <div className="logo-in">.in</div>
+                    <div className="logo-text-wrapper">
+                        <div className="logo-text">amazon</div>
+                        <div className="logo-in">.in</div>
+                    </div>
                     <div className="logo-smile">
                         <svg viewBox="0 0 100 18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 5 Q50 20 95 5" stroke="#ff9900" strokeWidth="4" fill="none" strokeLinecap="round" />
