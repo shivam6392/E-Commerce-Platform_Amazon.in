@@ -84,10 +84,12 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
 
         if (error) {
             // SPECIFIC CHECK FOR RESEND FREE TIER RESTRICTION
-            // Error code 403 or specific message usually indicates unverified recipient on free tier
-            if (error.name === 'resend_error' && (error as any).status === 403) {
+            // The log shows name: 'validation_error' and statusCode: 403
+            const err = error as any;
+            if (err.statusCode === 403 || err.name === 'validation_error') {
                 console.error('❌ RESEND ERROR: You are on the Free Tier and trying to send to an unverified email address.');
-                console.error(`   To send to ${userEmail}, you must verify your domain in the Resend dashboard.`);
+                console.error(`   To send to "${userEmail}", you must verify your domain in the Resend dashboard.`);
+                console.error('   Error Message:', err.message);
             } else {
                 console.error(' Resend API Error:', error);
             }
