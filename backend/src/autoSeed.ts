@@ -62,7 +62,7 @@ const products = [
         name: 'Keychron K2 Pro Mechanical Keyboard (Wireless)',
         description: 'Compact 75% layout mechanical keyboard with hot-swappable switches, RGB backlight, and Bluetooth 5.1. Compatible with Mac and Windows. Gateron Brown switches.',
         price: 8499, category: 'Electronics',
-        imageUrls: ['https://images.unsplash.com/photo-1563191911-e65a8f7c34ab?w=600'],
+        imageUrls: ['https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600'],
         stock: 90, rating: 4.6, reviewCount: 5678,
     },
     {
@@ -99,7 +99,7 @@ const products = [
         name: 'Men\'s Premium Cotton Hoodie - Oversized Fit',
         description: 'Ultra-soft 400 GSM cotton blend hoodie with a relaxed, oversized silhouette. Features kangaroo pocket, adjustable drawstring hood, and ribbed cuffs.',
         price: 1499, category: 'Clothing',
-        imageUrls: ['https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600'],
+        imageUrls: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600'],
         stock: 300, rating: 4.5, reviewCount: 9870,
     },
     {
@@ -259,7 +259,7 @@ const products = [
         name: 'Boldfit Resistance Bands Set for Workout',
         description: 'Set of 5 fabric resistance bands in varying resistance levels. Perfect for glute activation, stretching, and full-body workouts. Non-slip, durable design.',
         price: 499, category: 'Sports',
-        imageUrls: ['https://images.unsplash.com/photo-1598289431512-b97b0917afb5?w=600'],
+        imageUrls: ['https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600'],
         stock: 400, rating: 4.2, reviewCount: 18900,
     },
     {
