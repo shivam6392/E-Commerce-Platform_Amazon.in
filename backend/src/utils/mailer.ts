@@ -1,12 +1,18 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-// Initialize Resend with the API key
-const resend = new Resend(process.env.RESEND_API_KEY!);
+// Create a transporter using Gmail SMTP
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER, // e.g. 'yourgmail@gmail.com'
+        pass: process.env.EMAIL_PASS, // 16-character App Password
+    },
+});
 
 export const sendOrderConfirmationEmail = async (userEmail: string, userName: string, orderDetails: any) => {
     try {
-        if (!process.env.RESEND_API_KEY) {
-            console.error(' Missing RESEND_API_KEY in environment variables.');
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            console.error('❌ EMAIL_USER or EMAIL_PASS missing in environment variables.');
             return;
         }
 
@@ -20,7 +26,6 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
 
         const formattedId = formatOrderId(orderDetails.id);
 
-        // Generate HTML list of items
         const itemsHtml = orderDetails.items.map((item: any) => `
             <tr>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.product.name}</td>
@@ -29,7 +34,6 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
             </tr>
         `).join('');
 
-        // Email content
         const html = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
                 <div style="background-color: #232f3e; padding: 20px; text-align: center;">
@@ -66,39 +70,23 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
                     </div>
 
                     <p style="margin-top: 30px; font-size: 12px; color: #777;">
-                        This is an automated confirmation email. Please do not reply to this message.
+                        This is an automated confirmation email from Amazon Clone. Please do not reply to this message.
                     </p>
                 </div>
             </div>
         `;
 
-        // Send mail with Resend API
-        // NOTE: On free tier, 'from' MUST be onboarding@resend.dev
-        // and 'to' MUST be the email address you registered Resend with.
-        const { data, error } = await resend.emails.send({
-            from: 'Amazon Clone <onboarding@resend.dev>',
+        const mailOptions = {
+            from: `"Amazon Clone" <${process.env.EMAIL_USER}>`,
             to: userEmail,
             subject: `Your Amazon Clone order #${formattedId} is confirmed`,
             html: html,
-        });
+        };
 
-        if (error) {
-            // SPECIFIC CHECK FOR RESEND FREE TIER RESTRICTION
-            // The log shows name: 'validation_error' and statusCode: 403
-            const err = error as any;
-            if (err.statusCode === 403 || err.name === 'validation_error') {
-                console.error('❌ RESEND ERROR: You are on the Free Tier and trying to send to an unverified email address.');
-                console.error(`   To send to "${userEmail}", you must verify your domain in the Resend dashboard.`);
-                console.error('   Error Message:', err.message);
-            } else {
-                console.error(' Resend API Error:', error);
-            }
-            return;
-        }
-
-        console.log(' Order Email Sent successfully via Resend API!', data);
+        const info = await transporter.sendMail(mailOptions);
+        console.log('✅ Order Email Sent successfully via Gmail!', info.messageId);
 
     } catch (error) {
-        console.error('❌ Failed to send email confirmation via Resend:', error);
+        console.error('❌ Failed to send email confirmation via Gmail:', error);
     }
 };
