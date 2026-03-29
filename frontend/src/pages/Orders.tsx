@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import { getOrders } from '../api';
 import { useAuth } from '../context/AuthContext';
 import type { Order } from '../types';
@@ -62,7 +63,9 @@ const Orders: React.FC = () => {
                   </div>
                   <div>
                     <div className="oh-label">SHIP TO</div>
-                    <div className="oh-val view-order-link" style={{ cursor: 'pointer' }}>{order.userId === 1 ? 'Guest User' : 'You'} ▼</div>
+                    <div className="oh-val view-order-link" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {order.userId === 1 ? 'Guest User' : 'You'} <ChevronDown size={14} />
+                    </div>
                   </div>
                   <div className="order-status-badge">{order.status}</div>
                 </div>
