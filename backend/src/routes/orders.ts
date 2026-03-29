@@ -42,6 +42,26 @@ router.post('/', async (req: Request, res: Response) => {
         include: { items: { include: { product: true } } },
     });
 
+    // 1. Deduct exact stock from the products dynamically
+    const stockUpdates = cart.items.map(item => 
+        prisma.product.update({
+            where: { id: item.productId },
+            data: { stock: { decrement: item.quantity } }
+        })
+    );
+
+    // 2. Clear out the cart entirely so the user doesn't double-order
+    const clearCartItems = prisma.cartItem.deleteMany({
+        where: { cartId: cart.id }
+    });
+    const updateCartTotal = prisma.cart.update({
+        where: { id: cart.id },
+        data: { totalAmount: 0 }
+    });
+
+    // Execute all updates simultaneously safely in a transaction
+    await prisma.$transaction([...stockUpdates, clearCartItems, updateCartTotal]);
+
     // Trigger Async Email Notification (Bonus Feature)
     sendOrderConfirmationEmail(cart.user.email, cart.user.name, order).catch(console.error);
 
