@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { prisma } from '../db';
+import { sendOrderConfirmationEmail } from '../utils/mailer';
 
 const router = Router();
 
@@ -41,9 +42,8 @@ router.post('/', async (req: Request, res: Response) => {
         include: { items: { include: { product: true } } },
     });
 
-    // Mocked Email Notification (Bonus Feature)
-    console.log(`📧 EMAIL NOTIFICATION: Order #${order.id} placed for ${cart.user.name} (${cart.user.email}). 
-    Total: ₹${order.totalAmount}. Shipping to: ${shippingAddress}`);
+    // Trigger Async Email Notification (Bonus Feature)
+    sendOrderConfirmationEmail(cart.user.email, cart.user.name, order).catch(console.error);
 
     res.json(order);
 });
