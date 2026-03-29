@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Star, StarHalf, ShoppingCart, Heart, Eye } from 'lucide-react';
 import type { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
+import { useAuth } from '../context/AuthContext';
 import './ProductCard.css';
 
 interface ProductCardProps {
@@ -34,8 +36,12 @@ export const StarRating: React.FC<{ rating: number; count: number; compact?: boo
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const { addItem, loading } = useCart();
+    const { isWishlisted, toggleWishlist } = useWishlist();
+    const { user } = useAuth();
+    const navigate = useNavigate();
     const [added, setAdded] = useState(false);
-    const [wishlisted, setWishlisted] = useState(false);
+
+    const wishlisted = isWishlisted(product.id);
 
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -46,10 +52,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         setTimeout(() => setAdded(false), 1500);
     };
 
-    const handleWishlist = (e: React.MouseEvent) => {
+    const handleWishlist = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setWishlisted((w) => !w);
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+        await toggleWishlist(product.id);
     };
 
     const price = product.price;
