@@ -28,7 +28,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     const order = await prisma.order.create({
         data: {
-            userId: DEFAULT_USER_ID,
+            userId: userId,
             totalAmount: cart.totalAmount,
             shippingAddress,
             items: {
