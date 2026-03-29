@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { addToWishlist } from '../api';
-import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, CheckCircle, ShieldCheck } from 'lucide-react';
 import './Cart.css';
 
 const Cart: React.FC = () => {
@@ -115,7 +115,7 @@ const Cart: React.FC = () => {
       <div className="cart-summary">
         <div className="summary-box">
           <div className="summary-free-delivery">
-            ✅ Your order is eligible for <strong>FREE Delivery</strong>
+            <CheckCircle size={14} color="#007600" /> Your order is eligible for <strong>FREE Delivery</strong>
           </div>
           <div className="summary-total">
             Subtotal ({cart.items.reduce((s, i) => s + i.quantity, 0)} items):{' '}
@@ -125,7 +125,7 @@ const Cart: React.FC = () => {
             Proceed to Buy
           </button>
           <div className="summary-secure">
-            <span>🔒</span> Secure transaction
+            <ShieldCheck size={14} /> Secure transaction
           </div>
         </div>
       </div>
