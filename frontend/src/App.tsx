@@ -13,7 +13,7 @@ import { useSearchParams } from 'react-router-dom';
 
 // Wrapper to handle header search
 const AppRoutes: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const handleSearch = (query: string, category: string) => {
     const params: any = {};

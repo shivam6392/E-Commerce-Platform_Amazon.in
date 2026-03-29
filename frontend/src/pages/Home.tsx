@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search, SlidersHorizontal, X, TrendingUp, Zap } from 'lucide-react';
 import { getProducts } from '../api';
@@ -115,7 +115,7 @@ const SORT_OPTIONS = [
 const HeroSlider: React.FC<{ onShop: (cat: string) => void }> = ({ onShop }) => {
   const [slide, setSlide] = useState(0);
   const [animating, setAnimating] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   const goTo = (idx: number) => {
     if (animating) return;

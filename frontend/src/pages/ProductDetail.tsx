@@ -109,7 +109,7 @@ const ProductDetail: React.FC = () => {
   const originalPrice = Math.round(price * 1.2);
   const savings = originalPrice - price;
   const discount = 20;
-  const specs = getSpecs(product.category);
+
   const isOutOfStock = product.stock === 0;
   const isLowStock = product.stock > 0 && product.stock <= 5;
 
