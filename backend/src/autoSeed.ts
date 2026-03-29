@@ -40,7 +40,7 @@ const products = [
         description: 'Brilliant OLED picture quality with self-lit pixels. webOS Smart TV with ThinQ AI. Dolby Vision IQ and Dolby Atmos.',
         price: 99990,
         category: 'Electronics',
-        imageUrls: ['https://images.unsplash.com/photo-1593359677879-a4bb92f829e1?w=600'],
+        imageUrls: ['https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600'],
         stock: 18, rating: 4.6, reviewCount: 1230,
     },
     // Clothing
@@ -144,7 +144,7 @@ const products = [
         description: 'Build a stunning 1,580-piece replica of the iconic Porsche 911 RSR race car. Features working steering and detailed engine. For ages 10+.',
         price: 8999,
         category: 'Toys',
-        imageUrls: ['https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600'],
+        imageUrls: ['https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=600'],
         stock: 75, rating: 4.8, reviewCount: 6821,
     },
 ];
