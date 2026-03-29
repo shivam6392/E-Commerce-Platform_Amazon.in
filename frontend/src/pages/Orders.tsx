@@ -41,6 +41,10 @@ const Orders: React.FC = () => {
                     <div className="oh-label">TOTAL</div>
                     <div className="oh-val">{formatPrice(order.totalAmount)}</div>
                   </div>
+                  <div>
+                    <div className="oh-label">SHIP TO</div>
+                    <div className="oh-val view-order-link" style={{ cursor: 'pointer' }}>{order.userId === 1 ? 'Guest User' : 'You'} ▼</div>
+                  </div>
                   <div className="order-status-badge">{order.status}</div>
                 </div>
                 <div className="order-id-section">
@@ -60,9 +64,16 @@ const Orders: React.FC = () => {
                     <div className="oi-info">
                       <Link to={`/product/${item.product.id}`} className="oi-name">{item.product.name}</Link>
                       <div className="oi-meta">Qty: {item.quantity} × {formatPrice(item.price)}</div>
-                      <div className="oi-delivery">Expected by: {new Date(new Date(order.createdAt).getTime() + 3 * 86400000).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+                      <div className="oi-delivery">
+                        <strong>Expected Delivery:</strong> {new Date(new Date(order.createdAt).getTime() + 3 * 86400000).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
+                        <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#555' }}>Your package is on the way.</p>
+                      </div>
                     </div>
-                    <Link to={`/product/${item.product.id}`} className="buy-again-btn">Buy it again</Link>
+                    <div className="oi-actions">
+                      <button className="track-package-btn">Track package</button>
+                      <Link to={`/product/${item.product.id}`} className="buy-again-btn">Buy it again</Link>
+                      <button className="write-review-btn">Write a product review</button>
+                    </div>
                   </div>
                 ))}
               </div>
