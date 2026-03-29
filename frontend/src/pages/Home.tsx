@@ -325,7 +325,7 @@ const Home: React.FC = () => {
                 <ProductCarousel title="Up to 40% Off Electronics" seeAllLink="/?category=Electronics" products={electronics} />
               )}
               {topRated.length > 0 && (
-                <ProductCarousel title="🔥 Trending & Must-Haves" seeAllLink="/" products={topRated} />
+                <ProductCarousel title="Trending & Must-Haves" seeAllLink="/" products={topRated} />
               )}
               {clothing.length > 0 && (
                 <ProductCarousel title="Best Sellers in Clothing" seeAllLink="/?category=Clothing" products={clothing} />
@@ -424,7 +424,7 @@ const Home: React.FC = () => {
           <div className="active-filters">
             {activeCategory !== 'All' && <span className="filter-chip">{activeCategory}<button onClick={() => handleCategoryClick('All')}><X size={11} /></button></span>}
             {localSearch && <span className="filter-chip">"{localSearch}"<button onClick={clearSearch}><X size={11} /></button></span>}
-            {minRating > 0 && <span className="filter-chip">{minRating}★ & Up<button onClick={() => setMinRating(0)}><X size={11} /></button></span>}
+            {minRating > 0 && <span className="filter-chip">{minRating} Stars & Up<button onClick={() => setMinRating(0)}><X size={11} /></button></span>}
             {(priceRange[0] !== 0 || priceRange[1] !== 200000) && <span className="filter-chip">₹{priceRange[0].toLocaleString('en-IN')}–₹{priceRange[1].toLocaleString('en-IN')}<button onClick={() => setPriceRange([0, 200000])}><X size={11} /></button></span>}
           </div>
  
