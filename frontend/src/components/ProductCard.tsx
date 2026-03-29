@@ -71,8 +71,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     className="pcard-img"
                     loading="lazy"
                     onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                            `https://placehold.co/300x300/f5f5f5/aaa?text=${encodeURIComponent(product.category)}`;
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = `https://placehold.co/300x300/f5f5f5/aaa?text=${encodeURIComponent(product.category)}`;
                     }}
                 />
 
