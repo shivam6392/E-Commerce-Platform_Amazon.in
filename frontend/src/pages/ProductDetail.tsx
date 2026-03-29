@@ -178,7 +178,11 @@ const ProductDetail: React.FC = () => {
                 <img
                   src={url}
                   alt=""
-                  onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/80x80/f5f5f5/aaa?text=img'; }}
+                  onError={(e) => { 
+                    const target = e.currentTarget as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = 'https://placehold.co/80x80/f5f5f5/aaa?text=IMG'; 
+                  }}
                 />
               </button>
             ))}
@@ -203,7 +207,11 @@ const ProductDetail: React.FC = () => {
                 src={product.imageUrls[activeImg]}
                 alt={product.name}
                 className="pd-main-img"
-                onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/500x500/f5f5f5/aaa?text=Product'; }}
+                onError={(e) => { 
+                  const target = e.currentTarget as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = 'https://placehold.co/500x500/f5f5f5/aaa?text=Product'; 
+                }}
                 style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`, transform: 'scale(2)' } : {}}
                 draggable={false}
               />
