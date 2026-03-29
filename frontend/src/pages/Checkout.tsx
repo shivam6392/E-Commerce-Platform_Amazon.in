@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { placeOrder } from '../api';
+import { Loader2 } from 'lucide-react';
 import './Checkout.css';
 
 const Checkout: React.FC = () => {
@@ -145,7 +146,7 @@ const Checkout: React.FC = () => {
                 </div>
 
                 <button type="submit" className="place-order-btn" disabled={submitting}>
-                  {submitting ? '⏳ Placing Order...' : `Place your order  (${formatPrice(cart.totalAmount)})`}
+                  {submitting ? <><Loader2 size={16} className="spin" /> Placing Order...</> : `Place your order  (${formatPrice(cart.totalAmount)})`}
                 </button>
                 <p className="order-notice">
                   By placing your order, you agree to Amazon's privacy notice and conditions of use.
@@ -160,7 +161,7 @@ const Checkout: React.FC = () => {
         <div className="checkout-summary">
           <div className="summary-card">
             <button className="place-order-btn" onClick={handleSubmit as any} disabled={submitting}>
-              {submitting ? '⏳ Placing...' : 'Place your order'}
+              {submitting ? <><Loader2 size={16} className="spin" /> Placing...</> : 'Place your order'}
             </button>
             <p className="summary-agree">By placing your order, you agree to <span>Amazon's conditions of use</span>.</p>
             <hr />
