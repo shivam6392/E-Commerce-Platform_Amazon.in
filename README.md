@@ -1,121 +1,113 @@
-# Amazon Clone — Fullstack E-Commerce Platform
+# Amazon Clone - Full Stack E-Commerce Application
 
-A fully functional Amazon-like e-commerce web application built as an SDE Intern Fullstack Assignment.
+A fully functional, full-stack Amazon clone designed to mimic the core experience of Amazon.in. It features a complete shopping flow, including product browsing, search filtering, user authentication, cart management, and order placement.
 
-## 🏗️ Tech Stack
+## 🚀 Live Demo Structure
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18 + TypeScript (Vite) |
-| Backend | Node.js + Express.js + TypeScript |
-| Database | PostgreSQL + Prisma ORM (v7) |
-| Styling | Vanilla CSS (Amazon-inspired design system) |
-| HTTP Client | Axios |
-| Icons | Lucide React |
+This project is structured as a monorepo containing both the purely isolated frontend and backend environments, optimized for quick deployment on cloud platforms like Vercel and Render.
 
-## 🗂️ Project Structure
+- **Frontend:** Deployed on Vercel
+- **Backend/API:** Deployed on Render (PostgreSQL managed database)
 
-```
-amazon-clone/
-├── backend/         # Express + Prisma API server
-│   ├── src/
-│   │   ├── index.ts          # Server entry point
-│   │   └── routes/
-│   │       ├── products.ts   # Product APIs
-│   │       ├── cart.ts       # Cart APIs
-│   │       └── orders.ts     # Order APIs
-│   ├── prisma/
-│   │   ├── schema.prisma     # Database schema
-│   │   └── seed.ts           # Sample data seeder
-│   ├── prisma.config.ts      # Prisma v7 datasource config
-│   └── .env                  # Environment variables
-└── frontend/        # React + Vite SPA
-    └── src/
-        ├── api/              # Axios API service
-        ├── components/       # Header, Footer, ProductCard
-        ├── context/          # Cart context (global state)
-        ├── pages/            # All page components
-        └── types/            # TypeScript interfaces
-```
+---
 
-## 🗄️ Database Schema
+## 🛠️ Tech Stack & Architecture
 
-```
-User ────── Cart ───── CartItem ──── Product
-  └──────── Order ──── OrderItem ─── Product
-```
+### Frontend (`/frontend`)
+- **Framework:** React 19 (Vite)
+- **Language:** TypeScript
+- **Routing:** React Router v7
+- **Network Requests:** Axios
+- **Icons:** Lucide-React
+- **Styling:** Vanilla CSS (Custom flexbox & responsive grids matching Amazon's design system)
+- **State Management:** React Context API (`AuthContext`, `CartContext`)
 
-- **User**: Default user for the app (no login required)
-- **Product**: id, name, description, price, category, imageUrls, stock, rating, reviewCount
-- **Cart / CartItem**: Persistent cart per user, with auto-recalculated total
-- **Order / OrderItem**: Order with shipping address, status, and snapshot of item prices
+### Backend (`/backend`)
+- **Runtime:** Node.js
+- **Server:** Express.js
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Prisma (v7.6+)
+- **Security:** Standard CORS policies
 
-## 🚀 Setup Instructions
+---
 
-### Prerequisites
-- Node.js v18+
-- PostgreSQL running locally
-- npm v9+
+## ✨ Features
 
-### 1. Clone the repo
-```bash
-git clone <repo-url>
-cd amazon-clone
+- **User Authentication:** Sign up and login functionalities with isolated user sessions.
+- **Product Catalog:** A rich auto-seeded catalog of electronics, clothing, books, and home appliances.
+- **Dynamic Search:** Filter products exactly like the real site by category and title.
+- **Shopping Cart:** Add, remove, and adjust quantities of goods directly from a globally state-managed cart.
+- **Wishlist:** Add products to a customized saved wishlist.
+- **Orders:** Place orders processing the current state of the global cart.
+- **Responsive Navigation:** Intricate Amazon-style mobile navigation bar and sidebar.
+
+---
+
+## 💻 Local Development Workflow
+
+Follow these steps to safely run the application locally.
+
+### 1. Database Setup
+This project uses PostgreSQL. Have a local or remote PostgreSQL instance running.
+
+Ensure you configure the `.env` file in the `/backend` directory:
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/amazon_clone"
+PORT=5000
 ```
 
 ### 2. Backend Setup
 ```bash
 cd backend
-cp .env.example .env
-# Edit .env and set your DATABASE_URL
-# Example: DATABASE_URL="postgresql://postgres:password@localhost:5432/amazon_clone"
-
 npm install
 
-# Create the database first in PostgreSQL, then run:
-npx prisma migrate dev --name init
+# Force syncs the Prisma schema with your database (No migration files needed!)
+# This is specifically optimized for Render deployment and local setups
+npx prisma db push --accept-data-loss
 
-# Seed sample products
-npm run seed
+# Generate the Prisma client
+npx prisma generate 
 
-# Start the dev server (port 5000)
+# Start the development server (runs nodemon)
 npm run dev
 ```
+
+*Note: The backend is programmed to automatically seed the product catalog into your database on startup (`autoSeedIfEmpty()`).*
 
 ### 3. Frontend Setup
-```bash
-cd ../frontend
-npm install
+In a new terminal window, configure the frontend.
 
-# Start dev server (port 3000, proxies /api to :5000)
+```bash
+cd frontend
+npm install
+```
+
+Ensure your `/frontend/.env` file points to the local backend:
+```env
+VITE_API_URL="http://localhost:5000"
+```
+
+```bash
+# Start Vite development server
 npm run dev
 ```
 
-Open **http://localhost:3000** in your browser.
+The frontend will run on `http://localhost:3000` (or `http://localhost:5173`).
 
-## ✨ Core Features
+---
 
-| Feature | Description |
-|---------|-------------|
-| 🏠 Product Listing | Grid layout with search, category filters, shimmer loading |
-| 📦 Product Detail | Image carousel, buy box, stock status, specs |
-| 🛒 Shopping Cart | Add/update/remove items, real-time totals |
-| 💳 Checkout | Validated shipping form, order review, COD payment |
-| ✅ Order Confirmation | Order ID display, item summary, delivery estimate |
-| 📋 Order History | View all past orders with status and items |
-| 📱 Responsive Design | Mobile, tablet, and desktop support |
+## ☁️ Production Deployment Guide
 
-## 🎨 Design Decisions
+### Deploying the Backend (Render)
+1. Provide a managed PostgreSQL database via Render or Supabase.
+2. Add your `DATABASE_URL` environment variable.
+3. Configure your Build Command:
+   `npm install && npx prisma generate && npx prisma db push --accept-data-loss && npm run build`
+4. Configure your Start Command:
+   `npm start`
 
-- **Amazon-identical colors**: `#131921` (header), `#232f3e` (nav), `#ff9900` (accent), `#f0c14b` (buttons)
-- **Default User**: User with ID=1 is always the logged-in user (no auth required by assignment)
-- **Price Display**: Prices are in INR (₹) with a fake 20% discount for realism
-- **Prisma v7**: Uses `prisma.config.ts` for datasource URL (breaking change from Prisma v6)
-- **Cart Persistence**: Cart is stored in PostgreSQL, not localStorage, so it survives page refreshes
-
-## 📋 Assumptions
-
-1. A default user (`default@amazon.com`) is pre-seeded and always "logged in"
-2. Payment is Cash on Delivery only (no payment gateway integration)
-3. Product images are sourced from Unsplash (free CDN)
-4. Stock levels are static and not decremented on order placement in this demo
+### Deploying the Frontend (Vercel)
+1. Add the environment variable `VITE_API_URL` matching your Render live backend link (e.g., `https://amazon-backend.onrender.com`).
+2. Make sure there are NO trailing slashes securely handled by the `api/index.ts` interceptors!
+3. Deploy!
