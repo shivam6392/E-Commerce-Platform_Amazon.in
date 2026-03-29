@@ -11,7 +11,7 @@ import {
   ShoppingCart, Zap, ChevronLeft, ChevronRight,
   Package2, RotateCcw, Shield, Truck, Tag,
   Heart, Share2, CheckCircle, AlertTriangle,
-  ChevronDown, ChevronUp, MapPin
+  ChevronDown, ChevronUp, MapPin, Search, CreditCard
 } from 'lucide-react';
 import './ProductDetail.css';
 
@@ -196,7 +196,7 @@ const ProductDetail: React.FC = () => {
                 draggable={false}
               />
               {!zoom && (
-                <div className="zoom-hint">🔍 Hover to zoom</div>
+                <div className="zoom-hint"><Search size={14} /> Hover to zoom</div>
               )}
             </div>
 
@@ -278,7 +278,7 @@ const ProductDetail: React.FC = () => {
             {/* EMI offer */}
             {price > 5000 && (
               <div className="pd-emi-offer">
-                <span className="emi-icon">💳</span>
+                <span className="emi-icon"><CreditCard size={16} /></span>
                 No Cost EMI available from ₹{formatINR(Math.round(price / 12))}/month
               </div>
             )}
@@ -424,7 +424,7 @@ const ProductDetail: React.FC = () => {
 
             {/* Cart success message */}
             {cartState === 'added' && (
-              <div className="bb-added">✅ Added to Cart!</div>
+              <div className="bb-added"><CheckCircle size={14} color="#007600" /> Added to Cart!</div>
             )}
 
             {/* Action Buttons */}
@@ -434,7 +434,7 @@ const ProductDetail: React.FC = () => {
               disabled={loading || isOutOfStock || cartState === 'adding'}
             >
               <ShoppingCart size={16} />
-              {cartState === 'adding' ? 'Adding…' : cartState === 'added' ? '✔ Added to Cart' : 'Add to Cart'}
+              {cartState === 'adding' ? 'Adding…' : cartState === 'added' ? <><CheckCircle size={16} /> Added to Cart</> : 'Add to Cart'}
             </button>
 
             <button
