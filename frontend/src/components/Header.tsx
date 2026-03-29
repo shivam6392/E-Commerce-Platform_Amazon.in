@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Search, MapPin, Globe, ChevronDown, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import './Header.css';
+
 
 const CATEGORIES = ['All', 'Electronics', 'Clothing', 'Books', 'Home & Kitchen', 'Sports', 'Toys'];
 const NAV_ITEMS = [
@@ -25,7 +27,9 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     const { cartCount } = useCart();
+    const { user, logoutUser } = useAuth();
     const navigate = useNavigate();
+
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [sticky, setSticky] = useState(false);
@@ -117,12 +121,20 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                     </div>
 
                     {/* Account */}
-                    <div className="header-account">
-                        <div className="header-label">Hello, Sign in</div>
+                    <div className="header-account" onClick={() => !user && navigate('/login')}>
+                        <div className="header-label">Hello, {user ? user.name.split(' ')[0] : 'Sign in'}</div>
                         <div className="header-value">
                             Account &amp; Lists <ChevronDown size={12} />
                         </div>
+                        {user && (
+                            <div className="account-dropdown">
+                                <Link to="/orders">Your Orders</Link>
+                                <Link to="/wishlist">Your Wish List</Link>
+                                <button onClick={logoutUser} className="logout-btn">Sign Out</button>
+                            </div>
+                        )}
                     </div>
+
 
                     {/* Orders */}
                     <Link to="/orders" className="header-orders">

@@ -9,6 +9,11 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
 import Orders from './pages/Orders';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Wishlist from './pages/Wishlist';
+import { AuthProvider } from './context/AuthContext';
+
 import { useSearchParams } from 'react-router-dom';
 
 // Wrapper to handle header search
@@ -33,7 +38,11 @@ const AppRoutes: React.FC = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
+
       </main>
       <Footer />
     </>
@@ -43,11 +52,14 @@ const AppRoutes: React.FC = () => {
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <CartProvider>
-        <AppRoutes />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <AppRoutes />
+        </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
+
 };
 
 export default App;

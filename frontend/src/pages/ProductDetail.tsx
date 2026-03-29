@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProduct } from '../api';
+import { getProduct, getWishlist, addToWishlist, removeFromWishlist } from '../api';
 import type { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+
 import { StarRating } from '../components/ProductCard';
 import {
   ShoppingCart, Zap, ChevronLeft, ChevronRight,
@@ -53,11 +55,15 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addItem, loading } = useCart();
+  const { user } = useAuth();
+
   const [product, setProduct] = useState<Product | null>(null);
   const [activeImg, setActiveImg] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [cartState, setCartState] = useState<'idle' | 'adding' | 'added'>('idle');
   const [wishlisted, setWishlisted] = useState(false);
+  const [wishlistItemId, setWishlistItemId] = useState<number | null>(null);
+
   const [descExpanded, setDescExpanded] = useState(false);
   const [zoom, setZoom] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
@@ -71,10 +77,23 @@ const ProductDetail: React.FC = () => {
     setCartState('idle');
     if (id) {
       getProduct(Number(id))
-        .then((res) => setProduct(res.data))
+        .then((res) => {
+          setProduct(res.data);
+          setActiveImg(0);
+        })
         .catch(() => navigate('/'));
+
+      if (user && id) {
+        getWishlist(user.id).then(res => {
+          const item = res.data.find((i: any) => i.productId === Number(id));
+          if (item) {
+            setWishlisted(true);
+            setWishlistItemId(item.id);
+          }
+        });
+      }
     }
-  }, [id]);
+  }, [id, user]);
 
   const handleAddToCart = async () => {
     if (cartState !== 'idle') return;
@@ -433,12 +452,28 @@ const ProductDetail: React.FC = () => {
             <div className="bb-links">
               <button
                 className={`bb-link ${wishlisted ? 'active' : ''}`}
-                onClick={() => setWishlisted((w) => !w)}
+                onClick={async () => {
+                  if (!user) return navigate('/login', { state: { from: { pathname: `/product/${id}` } } });
+                  try {
+                    if (wishlisted && wishlistItemId) {
+                      await removeFromWishlist(wishlistItemId);
+                      setWishlisted(false);
+                      setWishlistItemId(null);
+                    } else {
+                      const res = await addToWishlist({ userId: user.id, productId: Number(id) });
+                      setWishlisted(true);
+                      setWishlistItemId(res.data.id);
+                    }
+                  } catch (err) {
+                    console.error('Wishlist action failed', err);
+                  }
+                }}
               >
-                <Heart size={14} fill={wishlisted ? '#e53935' : 'none'} />
+                <Heart size={14} fill={wishlisted ? '#e53935' : 'none'} color={wishlisted ? '#e53935' : 'currentColor'} />
                 {wishlisted ? 'Wishlisted' : 'Add to Wish List'}
               </button>
             </div>
+
           </div>
         </aside>
       </div>

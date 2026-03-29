@@ -163,8 +163,9 @@ export async function autoSeedIfEmpty(): Promise<void> {
         await prisma.user.upsert({
             where: { email: 'default@amazon.com' },
             update: {},
-            create: { name: 'Default User', email: 'default@amazon.com' },
+            create: { name: 'Default User', email: 'default@amazon.com', password: 'password123' },
         });
+
 
         // Seed products
         for (const product of products) {

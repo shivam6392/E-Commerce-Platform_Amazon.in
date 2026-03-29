@@ -223,6 +223,57 @@
   border-color: #fff;
 }
 
+.header-account {
+  position: relative;
+}
+
+.account-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  padding: 10px 0;
+  flex-direction: column;
+}
+
+.header-account:hover .account-dropdown {
+  display: flex !important;
+}
+
+.account-dropdown a,
+.account-dropdown button {
+  padding: 10px 15px;
+  font-size: 13px;
+  color: #111;
+  text-decoration: none;
+  text-align: left;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  display: block;
+}
+
+.account-dropdown a:hover,
+.account-dropdown button:hover {
+  background-color: #f3f3f3;
+  color: #c45500;
+  text-decoration: underline;
+}
+
+.logout-btn {
+  border-top: 1px solid #eee !important;
+  margin-top: 5px !important;
+  padding-top: 12px !important;
+}
+
+
 .header-label {
   font-size: 11px;
   color: #ccc;

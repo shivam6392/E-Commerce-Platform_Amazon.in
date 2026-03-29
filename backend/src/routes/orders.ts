@@ -12,8 +12,12 @@ router.post('/', async (req: Request, res: Response) => {
 
     const cart = await prisma.cart.findFirst({
         where: { userId: DEFAULT_USER_ID },
-        include: { items: { include: { product: true } } },
+        include: {
+            user: true,
+            items: { include: { product: true } }
+        },
     });
+
 
     if (!cart || cart.items.length === 0) {
         return res.status(400).json({ error: 'Cart is empty' });
@@ -35,12 +39,13 @@ router.post('/', async (req: Request, res: Response) => {
         include: { items: { include: { product: true } } },
     });
 
-    // Clear cart after placing order
-    await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
-    await prisma.cart.update({ where: { id: cart.id }, data: { totalAmount: 0 } });
+    // Mocked Email Notification (Bonus Feature)
+    console.log(`📧 EMAIL NOTIFICATION: Order #${order.id} placed for ${cart.user.name} (${cart.user.email}). 
+    Total: ₹${order.totalAmount}. Shipping to: ${shippingAddress}`);
 
     res.json(order);
 });
+
 
 // GET /api/orders - get all orders for default user
 router.get('/', async (req: Request, res: Response) => {

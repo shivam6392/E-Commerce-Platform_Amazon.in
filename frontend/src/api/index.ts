@@ -20,11 +20,19 @@ export const addToCart = (productId: number, quantity = 1) =>
 export const updateCartItem = (itemId: number, quantity: number) =>
     API.put(`/cart/items/${itemId}`, { quantity });
 
-export const removeCartItem = (itemId: number) =>
-    API.delete(`/cart/items/${itemId}`);
+export const removeCartItem = (id: number) => API.delete(`/cart/${id}`);
 
-export const placeOrder = (shippingAddress: string) =>
-    API.post('/orders', { shippingAddress });
+// Auth
+export const login = (data: any) => API.post('/auth/login', data);
+export const register = (data: any) => API.post('/auth/register', data);
+
+// Wishlist
+export const getWishlist = (userId: number) => API.get(`/wishlist/${userId}`);
+export const addToWishlist = (data: { userId: number; productId: number }) => API.post('/wishlist', data);
+export const removeFromWishlist = (id: number) => API.delete(`/wishlist/${id}`);
+
+// Orders
+export const placeOrder = (shippingAddress: string) => API.post('/orders', { shippingAddress });
 
 export const getOrders = () => API.get('/orders');
 

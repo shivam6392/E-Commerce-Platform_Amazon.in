@@ -4,8 +4,9 @@ import dotenv from 'dotenv';
 import productRoutes from './routes/products';
 import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
+import authRoutes from './routes/auth';
+import wishlistRoutes from './routes/wishlist';
 import { autoSeedIfEmpty } from './autoSeed';
-
 
 dotenv.config();
 
@@ -38,6 +39,9 @@ app.get('/api/health', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+
 
 // Auto-seed on startup (free tier friendly — no Shell access needed)
 (async () => {

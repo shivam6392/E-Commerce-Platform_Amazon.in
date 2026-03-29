@@ -10,10 +10,13 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
+  password  String   // Basic storage for bonus requirement
   createdAt DateTime @default(now())
   carts     Cart[]
   orders    Order[]
+  wishlist  WishlistItem[]
 }
+
 
 model Product {
   id          Int      @id @default(autoincrement())
@@ -28,7 +31,9 @@ model Product {
   createdAt   DateTime @default(now())
   cartItems   CartItem[]
   orderItems  OrderItem[]
+  wishlist    WishlistItem[]
 }
+
 
 model Cart {
   id          Int        @id @default(autoincrement())
@@ -69,3 +74,15 @@ model OrderItem {
   quantity  Int
   price     Float
 }
+
+model WishlistItem {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
