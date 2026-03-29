@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Search, MapPin, Globe, ChevronDown, X } from 'lucide-react';
+import { ShoppingCart, Search, MapPin, Globe, ChevronDown, X, Menu } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
@@ -8,7 +8,7 @@ import './Header.css';
 
 const CATEGORIES = ['All', 'Electronics', 'Clothing', 'Books', 'Home & Kitchen', 'Sports', 'Toys'];
 const NAV_ITEMS = [
-    { label: '☰ All', path: '/' },
+    { label: 'All', path: '/', isMenu: true },
     { label: 'Fresh', path: '/?category=Fresh' },
     { label: 'Amazon Pay', path: '/' },
     { label: 'Gift Cards', path: '/' },
@@ -165,8 +165,9 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             {/* ── Secondary Navigation ── */}
             <nav className={`header-nav ${sticky ? 'sticky-nav' : ''}`}>
                 <div className="nav-inner">
-                    {NAV_ITEMS.filter(item => user || item.label !== 'Buy Again').map((item) => (
+                    {NAV_ITEMS.filter(item => user || item.label !== 'Buy Again').map((item: any) => (
                         <Link key={item.label} to={item.path} className="nav-item">
+                            {item.isMenu && <Menu size={18} style={{ marginRight: '4px' }} />}
                             {item.label}
                         </Link>
                     ))}
