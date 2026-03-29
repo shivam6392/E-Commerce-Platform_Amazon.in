@@ -10,6 +10,16 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
             return;
         }
 
+        const formatOrderId = (id: number) => {
+            const hash = id * 314159;
+            const p1 = 400 + (id % 100);
+            const p2 = String(hash % 9999999).padStart(7, '0');
+            const p3 = String((hash * 7) % 9999999).padStart(7, '0');
+            return `${p1}-${p2}-${p3}`;
+        };
+
+        const formattedId = formatOrderId(orderDetails.id);
+
         // Generate HTML list of items
         const itemsHtml = orderDetails.items.map((item: any) => `
             <tr>
@@ -28,7 +38,7 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
                 <div style="padding: 20px;">
                     <h2 style="color: #333;">Order Confirmation</h2>
                     <p>Hello <strong>${userName}</strong>,</p>
-                    <p>Thank you for shopping with us! Your order <strong>#${orderDetails.id}</strong> has been placed successfully and is currently being processed.</p>
+                    <p>Thank you for shopping with us! Your order <strong>#${formattedId}</strong> has been placed successfully and is currently being processed.</p>
                     
                     <h3>Order Details:</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -68,7 +78,7 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
         const { data, error } = await resend.emails.send({
             from: 'Amazon Clone <onboarding@resend.dev>',
             to: userEmail,
-            subject: `Your Amazon Clone order #${orderDetails.id} is confirmed`,
+            subject: `Your Amazon Clone order #${formattedId} is confirmed`,
             html: html,
         });
 
