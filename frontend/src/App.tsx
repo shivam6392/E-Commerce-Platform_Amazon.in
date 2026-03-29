@@ -54,13 +54,16 @@ const RenderWakeOverlay: React.FC = () => {
           This project's backend is hosted on Render's free tier, which goes to sleep after 15 minutes of inactivity.
         </p>
         <p>Please click below to wake the server up for the optimal Amazon Clone experience!</p>
-        <button 
+        <a 
           className="render-btn" 
+          href="https://amazon-clone-backend-kpl5.onrender.com"
+          target="_blank"
+          rel="noreferrer"
           onClick={handleActivate}
-          disabled={status !== 'idle'}
+          style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}
         >
           {status === 'idle' ? 'Activate Full Experience' : status === 'activating' ? 'Waking up server (~40s)...' : '✔ Server Active'}
-        </button>
+        </a>
       </div>
     </div>
   );
