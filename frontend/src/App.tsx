@@ -12,10 +12,10 @@ import Orders from './pages/Orders';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Wishlist from './pages/Wishlist';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import { WishlistProvider } from './context/WishlistContext';
 
-import { useSearchParams, Navigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 
 // Render Server Wake Overlay — hidden for 15 minutes after activation
@@ -50,7 +50,7 @@ const RenderWakeOverlay: React.FC = () => {
   return (
     <div className="render-overlay">
       <div className="render-box">
-        <h3>🚀 Activate Server</h3>
+        <h3>Activate Server</h3>
         <p>
           This project's backend is hosted on Render's free tier, which goes to sleep after 15 minutes of inactivity.
         </p>
@@ -63,7 +63,7 @@ const RenderWakeOverlay: React.FC = () => {
           onClick={handleActivate}
           style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}
         >
-          {status === 'idle' ? 'Activate Full Experience' : status === 'activating' ? 'Waking up server (~40s)...' : '✔ Server Active'}
+          {status === 'idle' ? 'Activate Full Experience' : status === 'activating' ? 'Waking up server (~40s)...' : 'Server Active'}
         </a>
       </div>
     </div>
@@ -72,7 +72,6 @@ const RenderWakeOverlay: React.FC = () => {
 
 // Wrapper to handle header search
 const AppRoutes: React.FC = () => {
-  const { user, loading } = useAuth();
   const [, setSearchParams] = useSearchParams();
 
   const handleSearch = (query: string, category: string) => {
@@ -81,8 +80,6 @@ const AppRoutes: React.FC = () => {
     if (category && category !== 'All') params.category = category;
     setSearchParams(params);
   };
-
-  if (loading) return null;
 
   return (
     <>
@@ -93,13 +90,14 @@ const AppRoutes: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={user ? <Checkout /> : <Navigate to="/login" />} />
-          <Route path="/order-confirmation/:id" element={user ? <OrderConfirmation /> : <Navigate to="/login" />} />
-          <Route path="/orders" element={user ? <Orders /> : <Navigate to="/login" />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/wishlist" element={user ? <Wishlist /> : <Navigate to="/login" />} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
+
       </main>
       <Footer />
     </>
@@ -118,6 +116,7 @@ const App: React.FC = () => {
       </AuthProvider>
     </BrowserRouter>
   );
+
 };
 
 export default App;
