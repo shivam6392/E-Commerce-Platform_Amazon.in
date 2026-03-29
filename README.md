@@ -2,7 +2,7 @@
 
 A fully functional, full-stack Amazon clone designed to mimic the core experience of Amazon.in. It features a complete shopping flow, including product browsing, search filtering, user authentication, cart management, and order placement.
 
-## 🚀 Live Demo Structure
+##  Live Demo Structure
 
 This project is structured as a monorepo containing both the purely isolated frontend and backend environments, optimized for quick deployment on cloud platforms like Vercel and Render.
 
@@ -32,7 +32,7 @@ This project is structured as a monorepo containing both the purely isolated fro
 
 ---
 
-## ✨ Features
+##  Features
 
 - **User Authentication:** Sign up and login functionalities with isolated user sessions.
 - **Product Catalog:** A rich auto-seeded catalog of electronics, clothing, books, and home appliances.
@@ -44,7 +44,7 @@ This project is structured as a monorepo containing both the purely isolated fro
 
 ---
 
-## 💻 Local Development Workflow
+##  Local Development Workflow
 
 Follow these steps to safely run the application locally.
 
@@ -97,7 +97,7 @@ The frontend will run on `http://localhost:3000` (or `http://localhost:5173`).
 
 ---
 
-## ☁️ Production Deployment Guide
+##  Production Deployment Guide
 
 ### Deploying the Backend (Render)
 1. Provide a managed PostgreSQL database via Render or Supabase.
