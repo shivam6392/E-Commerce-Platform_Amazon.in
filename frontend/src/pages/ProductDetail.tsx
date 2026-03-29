@@ -107,8 +107,8 @@ const ProductDetail: React.FC = () => {
     await toggleWishlist(product.id);
   };
 
-  const nextImg = () => setActiveImg((i) => (i + 1) % product!.imageUrls.length);
-  const prevImg = () => setActiveImg((i) => (i - 1 + product!.imageUrls.length) % product!.imageUrls.length);
+  const nextImg = () => setActiveImg((i: number) => (i + 1) % product!.imageUrls.length);
+  const prevImg = () => setActiveImg((i: number) => (i - 1 + product!.imageUrls.length) % product!.imageUrls.length);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imgRef.current) return;
@@ -208,7 +208,7 @@ const ProductDetail: React.FC = () => {
             {/* Dot indicators */}
             {product.imageUrls.length > 1 && (
               <div className="pd-dots">
-                {product.imageUrls.map((_, i) => (
+                {product.imageUrls.map((_: any, i: number) => (
                   <button
                     key={i}
                     className={`pd-dot ${i === activeImg ? 'active' : ''}`}
