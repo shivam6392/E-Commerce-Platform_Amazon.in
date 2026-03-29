@@ -7,12 +7,12 @@ const router = Router();
 async function getOrCreateCart(userId: number) {
     let cart = await prisma.cart.findFirst({
         where: { userId: userId },
-        include: { items: { include: { product: true } } },
+        include: { items: { include: { product: true }, orderBy: { id: 'asc' } } },
     });
     if (!cart) {
         cart = await prisma.cart.create({
             data: { userId: userId },
-            include: { items: { include: { product: true } } },
+            include: { items: { include: { product: true }, orderBy: { id: 'asc' } } },
         });
     }
     return cart;
@@ -64,7 +64,7 @@ router.post('/items', async (req: Request, res: Response) => {
     await recalcTotal(cart.id);
     const updated = await prisma.cart.findUnique({
         where: { id: cart.id },
-        include: { items: { include: { product: true } } },
+        include: { items: { include: { product: true }, orderBy: { id: 'asc' } } },
     });
     res.json(updated);
 });
@@ -86,7 +86,7 @@ router.put('/items/:id', async (req: Request, res: Response) => {
     await recalcTotal(cart.id);
     const updated = await prisma.cart.findUnique({
         where: { id: cart.id },
-        include: { items: { include: { product: true } } },
+        include: { items: { include: { product: true }, orderBy: { id: 'asc' } } },
     });
     res.json(updated);
 });
@@ -100,7 +100,7 @@ router.delete('/items/:id', async (req: Request, res: Response) => {
     await recalcTotal(cart.id);
     const updated = await prisma.cart.findUnique({
         where: { id: cart.id },
-        include: { items: { include: { product: true } } },
+        include: { items: { include: { product: true }, orderBy: { id: 'asc' } } },
     });
     res.json(updated);
 });
