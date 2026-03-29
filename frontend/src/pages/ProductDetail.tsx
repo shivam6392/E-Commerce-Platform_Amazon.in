@@ -185,7 +185,8 @@ const ProductDetail: React.FC = () => {
                 alt={product.name}
                 className="pd-main-img"
                 onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/500x500/f5f5f5/aaa?text=Product'; }}
-                style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`, transform: 'scale(2)' } : {}}
+                style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`, transform: 'scale(2.5)' } : {}}
+
                 draggable={false}
               />
               {!zoom && (
