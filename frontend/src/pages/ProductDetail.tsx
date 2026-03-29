@@ -169,10 +169,22 @@ const ProductDetail: React.FC = () => {
 
           {/* Main Image with Zoom */}
           <div className="pd-main-img-wrap">
-            {/* Share action at the top right of gallery area */}
-            <button className="pd-share-btn" onClick={() => navigator.share?.({ title: product.name, url: window.location.href }).catch(() => { })} title="Share product">
-              <Share2 size={20} />
-            </button>
+            <div className="pd-gallery-action-overlay">
+              <button
+                className={`pd-ga-btn-floating wishlist ${wishlisted ? 'active' : ''}`}
+                onClick={toggleWishl}
+                title={wishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              >
+                <Heart size={20} fill={wishlisted ? '#e53935' : 'none'} />
+              </button>
+              <button
+                className="pd-ga-btn-floating share"
+                onClick={() => navigator.share?.({ title: product.name, url: window.location.href }).catch(() => { })}
+                title="Share product"
+              >
+                <Share2 size={20} />
+              </button>
+            </div>
 
             <div
               className={`pd-main-img-box ${zoom ? 'zoomed' : ''}`}
