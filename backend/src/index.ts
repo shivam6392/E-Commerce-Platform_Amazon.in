@@ -307,17 +307,34 @@ app.use('/api/wishlist', wishlistRoutes);
     // Fix broken images in live DB
     try {
         const { prisma } = require('./db');
-        await prisma.product.updateMany({
-            where: { name: 'LEGO Technic 42096 Porsche 911 RSR Building Kit' },
-            data: { imageUrls: ['https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=600'] }
-        });
-        await prisma.product.updateMany({
-            where: { name: 'LG 55 Inch 4K OLED Smart TV (2023 Model)' },
-            data: { imageUrls: ['https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600'] }
-        });
-        console.log('✅ Applied live image patches for broken products.');
+        const imagePatches = [
+            {
+                name: 'LEGO Technic 42096 Porsche 911 RSR Building Kit',
+                imageUrls: ['https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=600'],
+            },
+            {
+                name: 'LG 55 Inch 4K OLED Smart TV (2023 Model)',
+                imageUrls: ['https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600'],
+            },
+            {
+                name: 'Keychron K2 Pro Mechanical Keyboard (Wireless)',
+                imageUrls: ['https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600'],
+            },
+            {
+                name: "Men's Premium Cotton Hoodie - Oversized Fit",
+                imageUrls: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600'],
+            },
+            {
+                name: 'Boldfit Resistance Bands Set for Workout',
+                imageUrls: ['https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600'],
+            },
+        ];
+        for (const patch of imagePatches) {
+            await prisma.product.updateMany({ where: { name: patch.name }, data: { imageUrls: patch.imageUrls } });
+        }
+        console.log(' Applied live image patches for broken products.');
     } catch (err) {
-        console.error('⚠️ Image patch failed:', err);
+        console.error(' Image patch failed:', err);
     }
 
     await autoSeedIfEmpty();
