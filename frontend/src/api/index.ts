@@ -6,6 +6,19 @@ const BASE = import.meta.env.VITE_API_URL
 
 const API = axios.create({ baseURL: BASE });
 
+// Add interceptor to include userId in headers
+API.interceptors.request.use((config) => {
+    const userStr = localStorage.getItem('amazon_user');
+    if (userStr) {
+        const user = JSON.parse(userStr);
+        if (user && user.id) {
+            config.headers['x-user-id'] = user.id.toString();
+        }
+    }
+    return config;
+});
+
+
 
 export const getProducts = (params?: { search?: string; category?: string }) =>
     API.get('/products', { params });

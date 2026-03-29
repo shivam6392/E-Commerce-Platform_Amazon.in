@@ -8,10 +8,12 @@ const DEFAULT_USER_ID = 1;
 // POST /api/orders - place order from cart
 router.post('/', async (req: Request, res: Response) => {
     const { shippingAddress } = req.body;
+    const userId = Number(req.headers['x-user-id'] || 1);
     if (!shippingAddress) return res.status(400).json({ error: 'Shipping address is required' });
 
     const cart = await prisma.cart.findFirst({
-        where: { userId: DEFAULT_USER_ID },
+        where: { userId },
+
         include: {
             user: true,
             items: { include: { product: true } }
@@ -47,15 +49,17 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 
-// GET /api/orders - get all orders for default user
+// GET /api/orders - get all orders for specific user
 router.get('/', async (req: Request, res: Response) => {
+    const userId = Number(req.headers['x-user-id'] || 1);
     const orders = await prisma.order.findMany({
-        where: { userId: DEFAULT_USER_ID },
+        where: { userId },
         include: { items: { include: { product: true } } },
         orderBy: { createdAt: 'desc' },
     });
     res.json(orders);
 });
+
 
 // GET /api/orders/:id - single order
 router.get('/:id', async (req: Request, res: Response) => {

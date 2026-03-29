@@ -3,21 +3,27 @@ import { prisma } from '../db';
 
 const router = Router();
 
-const DEFAULT_USER_ID = 1;
-
-async function getOrCreateCart() {
+// Helper to get or create cart for a specific user
+async function getOrCreateCart(userId: number) {
     let cart = await prisma.cart.findFirst({
-        where: { userId: DEFAULT_USER_ID },
+        where: { userId: userId },
         include: { items: { include: { product: true } } },
     });
     if (!cart) {
         cart = await prisma.cart.create({
-            data: { userId: DEFAULT_USER_ID },
+            data: { userId: userId },
             include: { items: { include: { product: true } } },
         });
     }
     return cart;
 }
+
+// Utility to get userId from headers
+const getUserId = (req: Request) => {
+    const id = req.headers['x-user-id'];
+    return id ? Number(id) : 1; // Fallback to 1 for backward compatibility (optional)
+};
+
 
 async function recalcTotal(cartId: number) {
     const items = await prisma.cartItem.findMany({
@@ -30,14 +36,16 @@ async function recalcTotal(cartId: number) {
 
 // GET /api/cart
 router.get('/', async (req: Request, res: Response) => {
-    const cart = await getOrCreateCart();
+    const userId = getUserId(req);
+    const cart = await getOrCreateCart(userId);
     res.json(cart);
 });
 
 // POST /api/cart/items - add item
 router.post('/items', async (req: Request, res: Response) => {
     const { productId, quantity = 1 } = req.body;
-    const cart = await getOrCreateCart();
+    const userId = getUserId(req);
+    const cart = await getOrCreateCart(userId);
 
     const existing = await prisma.cartItem.findFirst({
         where: { cartId: cart.id, productId: Number(productId) },
@@ -64,6 +72,9 @@ router.post('/items', async (req: Request, res: Response) => {
 // PUT /api/cart/items/:id - update quantity
 router.put('/items/:id', async (req: Request, res: Response) => {
     const { quantity } = req.body;
+    const userId = getUserId(req);
+    const cart = await getOrCreateCart(userId);
+
     if (Number(quantity) <= 0) {
         await prisma.cartItem.delete({ where: { id: Number(req.params.id) } });
     } else {
@@ -72,7 +83,6 @@ router.put('/items/:id', async (req: Request, res: Response) => {
             data: { quantity: Number(quantity) },
         });
     }
-    const cart = await getOrCreateCart();
     await recalcTotal(cart.id);
     const updated = await prisma.cart.findUnique({
         where: { id: cart.id },
@@ -83,8 +93,10 @@ router.put('/items/:id', async (req: Request, res: Response) => {
 
 // DELETE /api/cart/items/:id
 router.delete('/items/:id', async (req: Request, res: Response) => {
+    const userId = getUserId(req);
+    const cart = await getOrCreateCart(userId);
+
     await prisma.cartItem.delete({ where: { id: Number(req.params.id) } });
-    const cart = await getOrCreateCart();
     await recalcTotal(cart.id);
     const updated = await prisma.cart.findUnique({
         where: { id: cart.id },
@@ -92,5 +104,6 @@ router.delete('/items/:id', async (req: Request, res: Response) => {
     });
     res.json(updated);
 });
+
 
 export default router;

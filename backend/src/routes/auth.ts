@@ -23,9 +23,11 @@ router.post('/register', async (req: Request, res: Response) => {
 
         res.status(201).json({ id: user.id, name: user.name, email: user.email });
     } catch (err) {
-        res.status(500).json({ error: 'Registration failed' });
+        console.error('REGISTRATION ERROR:', err);
+        res.status(500).json({ error: 'Registration failed', details: (err as Error).message });
     }
 });
+
 
 // POST /api/auth/login
 router.post('/login', async (req: Request, res: Response) => {

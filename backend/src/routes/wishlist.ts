@@ -5,9 +5,10 @@ const router = Router();
 
 // GET /api/wishlist/:userId
 router.get('/:userId', async (req: Request, res: Response) => {
+    const userId = Number(req.params.userId || req.headers['x-user-id'] || 1);
     try {
         const items = await prisma.wishlistItem.findMany({
-            where: { userId: Number(req.params.userId) },
+            where: { userId },
             include: { product: true },
             orderBy: { createdAt: 'desc' },
         });
@@ -19,8 +20,10 @@ router.get('/:userId', async (req: Request, res: Response) => {
 
 // POST /api/wishlist
 router.post('/', async (req: Request, res: Response) => {
-    const { userId, productId } = req.body;
+    const userId = Number(req.body.userId || req.headers['x-user-id'] || 1);
+    const { productId } = req.body;
     if (!userId || !productId) return res.status(400).json({ error: 'User ID and Product ID required' });
+
 
     try {
         const item = await prisma.wishlistItem.upsert({
