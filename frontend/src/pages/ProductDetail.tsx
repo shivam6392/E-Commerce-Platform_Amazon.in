@@ -108,6 +108,25 @@ const ProductDetail: React.FC = () => {
     navigate('/cart');
   };
 
+  const toggleWishlist = async () => {
+    if (!user) return navigate('/login', { state: { from: { pathname: `/product/${id}` } } });
+    if (!product) return;
+    
+    try {
+      if (wishlisted && wishlistItemId) {
+        await removeFromWishlist(wishlistItemId);
+        setWishlisted(false);
+        setWishlistItemId(null);
+      } else {
+        const res = await addToWishlist({ userId: user.id, productId: product.id });
+        setWishlisted(true);
+        setWishlistItemId(res.data.id);
+      }
+    } catch (err) {
+      console.error('Wishlist action failed', err);
+    }
+  };
+
   const nextImg = () => setActiveImg((i) => (i + 1) % product!.imageUrls.length);
   const prevImg = () => setActiveImg((i) => (i - 1 + product!.imageUrls.length) % product!.imageUrls.length);
 
@@ -185,8 +204,7 @@ const ProductDetail: React.FC = () => {
                 alt={product.name}
                 className="pd-main-img"
                 onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/500x500/f5f5f5/aaa?text=Product'; }}
-                style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`, transform: 'scale(2.5)' } : {}}
-
+                style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`, transform: 'scale(2)' } : {}}
                 draggable={false}
               />
               {!zoom && (
@@ -219,9 +237,9 @@ const ProductDetail: React.FC = () => {
           <div className="pd-gallery-actions">
             <button
               className={`pd-ga-btn ${wishlisted ? 'wishlisted' : ''}`}
-              onClick={() => setWishlisted((w) => !w)}
+              onClick={toggleWishlist}
             >
-              <Heart size={16} fill={wishlisted ? '#e53935' : 'none'} />
+              <Heart size={16} fill={wishlisted ? '#e53935' : 'none'} color={wishlisted ? '#e53935' : 'currentColor'} />
               {wishlisted ? 'Wishlisted' : 'Add to Wishlist'}
             </button>
             <button className="pd-ga-btn" onClick={() => navigator.share?.({ title: product.name, url: window.location.href }).catch(() => { })}>
@@ -453,22 +471,7 @@ const ProductDetail: React.FC = () => {
             <div className="bb-links">
               <button
                 className={`bb-link ${wishlisted ? 'active' : ''}`}
-                onClick={async () => {
-                  if (!user) return navigate('/login', { state: { from: { pathname: `/product/${id}` } } });
-                  try {
-                    if (wishlisted && wishlistItemId) {
-                      await removeFromWishlist(wishlistItemId);
-                      setWishlisted(false);
-                      setWishlistItemId(null);
-                    } else {
-                      const res = await addToWishlist({ userId: user.id, productId: Number(id) });
-                      setWishlisted(true);
-                      setWishlistItemId(res.data.id);
-                    }
-                  } catch (err) {
-                    console.error('Wishlist action failed', err);
-                  }
-                }}
+                onClick={toggleWishlist}
               >
                 <Heart size={14} fill={wishlisted ? '#e53935' : 'none'} color={wishlisted ? '#e53935' : 'currentColor'} />
                 {wishlisted ? 'Wishlisted' : 'Add to Wish List'}
