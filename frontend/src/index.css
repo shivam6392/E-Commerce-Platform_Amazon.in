@@ -38,3 +38,69 @@ input, select { font-family: inherit; }
 /* Utility */
 .text-center { text-align: center; }
 .page-container { max-width: 1400px; margin: 0 auto; padding: 0 16px; }
+
+/* Render Wake Overlay */
+.render-overlay {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 380px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  border: 1px solid #d5d9d9;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.render-box {
+  padding: 20px;
+}
+
+.render-box h3 {
+  color: #0f1111;
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.render-box p {
+  color: #555;
+  font-size: 13px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.render-btn {
+  width: 100%;
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.render-btn:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #f0c14b, #e6af2e);
+}
+
+.render-btn:disabled {
+  background: #f3f3f3;
+  border-color: #d5d9d9;
+  color: #888;
+  cursor: wait;
+}
