@@ -139,10 +139,12 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
 
                     {/* Orders */}
-                    <Link to="/orders" className="header-orders">
-                        <div className="header-label">Returns</div>
-                        <div className="header-value">&amp; Orders</div>
-                    </Link>
+                    {user && (
+                        <Link to="/orders" className="header-orders">
+                            <div className="header-label">Returns</div>
+                            <div className="header-value">&amp; Orders</div>
+                        </Link>
+                    )}
 
                     {/* Cart */}
                     <Link to="/cart" className="header-cart" aria-label={`Cart with ${cartCount} items`}>
@@ -163,7 +165,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             {/* ── Secondary Navigation ── */}
             <nav className={`header-nav ${sticky ? 'sticky-nav' : ''}`}>
                 <div className="nav-inner">
-                    {NAV_ITEMS.map((item) => (
+                    {NAV_ITEMS.filter(item => user || item.label !== 'Buy Again').map((item) => (
                         <Link key={item.label} to={item.path} className="nav-item">
                             {item.label}
                         </Link>
