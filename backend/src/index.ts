@@ -46,78 +46,241 @@ app.get('/', (req, res) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Amazon Clone Backend - Active</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
             <style>
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+                *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
                 body, html {
-                    margin: 0;
-                    padding: 0;
                     height: 100%;
                     font-family: 'Inter', sans-serif;
-                    background: linear-gradient(135deg, #131921 0%, #232f3e 50%, #37475A 100%);
-                    color: white;
+                    color: #fff;
+                    overflow: hidden;
+                }
+                body {
+                    background: linear-gradient(135deg, #0a0f1a 0%, #131921 30%, #1a2940 60%, #232f3e 100%);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    text-align: center;
+                    position: relative;
                 }
+
+                /* ─── Render logo watermark blended into background ─── */
+                .bg-logo {
+                    position: fixed;
+                    bottom: -60px;
+                    right: -40px;
+                    width: 480px;
+                    height: 480px;
+                    opacity: 0.04;
+                    pointer-events: none;
+                    animation: floatLogo 8s ease-in-out infinite;
+                    filter: blur(1px);
+                }
+                .bg-logo-2 {
+                    position: fixed;
+                    top: -80px;
+                    left: -60px;
+                    width: 360px;
+                    height: 360px;
+                    opacity: 0.025;
+                    pointer-events: none;
+                    transform: rotate(180deg);
+                    animation: floatLogo2 10s ease-in-out infinite;
+                    filter: blur(2px);
+                }
+
+                /* Ambient glow orbs */
+                .glow-1 {
+                    position: fixed;
+                    width: 500px; height: 500px;
+                    background: radial-gradient(circle, rgba(70,200,130,0.08) 0%, transparent 70%);
+                    bottom: -100px; right: -100px;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    animation: pulse1 6s ease-in-out infinite;
+                }
+                .glow-2 {
+                    position: fixed;
+                    width: 400px; height: 400px;
+                    background: radial-gradient(circle, rgba(255,153,0,0.06) 0%, transparent 70%);
+                    top: -80px; left: -80px;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    animation: pulse2 7s ease-in-out infinite;
+                }
+
+                /* ─── Card ─── */
                 .container {
-                    background: rgba(255, 255, 255, 0.05);
-                    backdrop-filter: blur(10px);
-                    padding: 3rem 4rem;
-                    border-radius: 16px;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-                    animation: floatIn 1s ease-out forwards;
-                    max-width: 600px;
+                    position: relative;
+                    z-index: 10;
+                    background: rgba(255,255,255,0.04);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    padding: 3rem 3.5rem;
+                    border-radius: 20px;
+                    border: 1px solid rgba(255,255,255,0.08);
+                    box-shadow: 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+                    max-width: 560px;
+                    width: 90%;
+                    text-align: center;
+                    animation: cardIn 1s cubic-bezier(0.16,1,0.3,1) forwards;
+                    opacity: 0;
                 }
-                .logo {
-                    color: #ff9900;
-                    font-size: 2.5rem;
-                    font-weight: 800;
-                    margin-bottom: 1rem;
-                    letter-spacing: -1px;
-                }
-                h1 {
-                    font-size: 2rem;
+
+                /* ─── Render badge ─── */
+                .render-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: rgba(70,200,130,0.12);
+                    border: 1px solid rgba(70,200,130,0.25);
+                    border-radius: 24px;
+                    padding: 6px 16px;
+                    margin-bottom: 1.5rem;
+                    font-size: 0.8rem;
                     font-weight: 600;
-                    color: #ffffff;
-                    margin-bottom: 1rem;
-                    line-height: 1.3;
+                    color: #46c882;
+                    letter-spacing: 0.5px;
+                    text-transform: uppercase;
                 }
-                p {
-                    font-size: 1.1rem;
-                    color: #e0e0e0;
+                .render-badge svg {
+                    width: 18px;
+                    height: 18px;
+                    fill: #46c882;
+                }
+
+                /* ─── Brand ─── */
+                .brand {
+                    font-size: 2.2rem;
+                    font-weight: 800;
+                    letter-spacing: -1px;
+                    margin-bottom: 0.75rem;
+                }
+                .brand .am { color: #ff9900; }
+                .brand .cl { color: rgba(255,255,255,0.5); font-weight: 500; font-size: 1.6rem; }
+
+                h1 {
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 0.75rem;
+                    line-height: 1.35;
+                    background: linear-gradient(135deg, #fff, #b0bec5);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                .subtitle {
+                    font-size: 1rem;
+                    color: rgba(255,255,255,0.55);
                     line-height: 1.6;
                     margin-bottom: 2rem;
                 }
+
+                /* ─── Status pill ─── */
+                .status {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    background: rgba(70,200,130,0.1);
+                    border: 1px solid rgba(70,200,130,0.2);
+                    border-radius: 20px;
+                    padding: 5px 14px;
+                    font-size: 0.78rem;
+                    color: #46c882;
+                    margin-bottom: 1.5rem;
+                }
+                .status-dot {
+                    width: 8px; height: 8px;
+                    background: #46c882;
+                    border-radius: 50%;
+                    animation: blink 2s ease-in-out infinite;
+                }
+
+                /* ─── Button ─── */
                 .btn {
                     display: inline-block;
-                    background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+                    background: linear-gradient(135deg, #f7dfa5, #f0c14b);
                     color: #111;
-                    padding: 12px 32px;
-                    border-radius: 8px;
+                    padding: 14px 36px;
+                    border-radius: 10px;
                     text-decoration: none;
-                    font-weight: 600;
-                    font-size: 1.1rem;
-                    transition: transform 0.2s, background 0.2s;
-                    box-shadow: 0 4px 12px rgba(240, 193, 75, 0.3);
+                    font-weight: 700;
+                    font-size: 1rem;
+                    transition: all 0.25s ease;
+                    box-shadow: 0 6px 20px rgba(240,193,75,0.25);
                 }
                 .btn:hover {
-                    transform: translateY(-2px);
-                    background: linear-gradient(to bottom, #f0c14b, #e6af2e);
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 30px rgba(240,193,75,0.35);
+                    background: linear-gradient(135deg, #f0c14b, #e6af2e);
                 }
-                @keyframes floatIn {
-                    0% { opacity: 0; transform: translateY(30px); }
-                    100% { opacity: 1; transform: translateY(0); }
+
+                .footer-note {
+                    margin-top: 1.5rem;
+                    font-size: 0.72rem;
+                    color: rgba(255,255,255,0.25);
+                }
+
+                /* ─── Animations ─── */
+                @keyframes cardIn {
+                    0% { opacity: 0; transform: translateY(40px) scale(0.97); }
+                    100% { opacity: 1; transform: translateY(0) scale(1); }
+                }
+                @keyframes floatLogo {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-20px); }
+                }
+                @keyframes floatLogo2 {
+                    0%, 100% { transform: rotate(180deg) translateY(0); }
+                    50% { transform: rotate(180deg) translateY(-15px); }
+                }
+                @keyframes pulse1 {
+                    0%, 100% { opacity: 0.6; transform: scale(1); }
+                    50% { opacity: 1; transform: scale(1.05); }
+                }
+                @keyframes pulse2 {
+                    0%, 100% { opacity: 0.5; transform: scale(1); }
+                    50% { opacity: 0.9; transform: scale(1.08); }
+                }
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.3; }
                 }
             </style>
         </head>
         <body>
+            <!-- Ambient glow orbs -->
+            <div class="glow-1"></div>
+            <div class="glow-2"></div>
+
+            <!-- Render logo watermarks blended into background -->
+            <svg class="bg-logo" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 512V256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512H0Z" fill="white"/>
+            </svg>
+            <svg class="bg-logo-2" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 512V256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512H0Z" fill="white"/>
+            </svg>
+
             <div class="container">
-                <div class="logo">amazon.in<span style="color: #fff"> clone</span></div>
+                <div class="render-badge">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 512V256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512H0Z"/>
+                    </svg>
+                    Powered by Render
+                </div>
+
+                <div class="brand"><span class="am">amazon.in</span> <span class="cl">clone</span></div>
                 <h1>Thank you for waking me up! 🚀</h1>
-                <p>The backend server is now fully operational and ready to process your requests. Enjoy your immersive experience with Amazon.in!</p>
+                <p class="subtitle">The backend server is now fully operational and ready to process your requests. Enjoy your immersive experience with Amazon.in!</p>
+
+                <div class="status">
+                    <span class="status-dot"></span>
+                    All systems operational
+                </div>
+                <br><br>
+
                 <a href="${process.env.FRONTEND_URL || '#'}" class="btn">Return to Shop</a>
+
+                <p class="footer-note">Hosted on Render · Free Tier · Auto-sleeps after 15 min of inactivity</p>
             </div>
         </body>
         </html>
