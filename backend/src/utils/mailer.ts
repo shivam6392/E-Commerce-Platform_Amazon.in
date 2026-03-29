@@ -1,20 +1,14 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+
+// Initialize Resend with the API key
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export const sendOrderConfirmationEmail = async (userEmail: string, userName: string, orderDetails: any) => {
     try {
-        // Create a test account dynamically on Ethereal
-        const testAccount = await nodemailer.createTestAccount();
-
-        // Create reusable transporter object using the default SMTP transport
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: testAccount.user, // generated ethereal user
-                pass: testAccount.pass, // generated ethereal password
-            },
-        });
+        if (!process.env.RESEND_API_KEY) {
+            console.error('❌ Missing RESEND_API_KEY in environment variables.');
+            return;
+        }
 
         // Generate HTML list of items
         const itemsHtml = orderDetails.items.map((item: any) => `
@@ -68,19 +62,24 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
             </div>
         `;
 
-        // Send mail with defined transport object
-        const info = await transporter.sendMail({
-            from: '"Amazon.in Clone" <no-reply@amazonclone.test>', // sender address
-            to: userEmail, // list of receivers
-            subject: `Your Amazon Clone order #${orderDetails.id} is confirmed`, // Subject line
-            html: html, // html body
+        // Send mail with Resend API
+        // NOTE: On free tier, 'from' MUST be onboarding@resend.dev
+        // and 'to' MUST be the email address you registered Resend with.
+        const { data, error } = await resend.emails.send({
+            from: 'Amazon Clone <onboarding@resend.dev>',
+            to: userEmail,
+            subject: `Your Amazon Clone order #${orderDetails.id} is confirmed`,
+            html: html,
         });
 
-        console.log('✅ 📧 Order Email Sent successfully!');
-        console.log('📬 Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        console.log('----------------------------------------------------');
+        if (error) {
+            console.error('❌ Resend API Error:', error);
+            return;
+        }
+
+        console.log('✅ 📧 Order Email Sent successfully via Resend API!', data);
         
     } catch (error) {
-        console.error('❌ Failed to send email confirmation:', error);
+        console.error('❌ Failed to send email confirmation via Resend:', error);
     }
 };
