@@ -48,8 +48,8 @@ app.use('/api/wishlist', wishlistRoutes);
 // Auto-seed and Migration on startup (free tier friendly — no Shell access needed)
 (async () => {
     try {
-        console.log('🔄 Running database migrations...');
-        execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+        console.log('🔄 Running database migrations (db push)...');
+        execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' });
         console.log('✅ Migrations completed.');
     } catch (err) {
         console.error('❌ Migration failed:', err);
