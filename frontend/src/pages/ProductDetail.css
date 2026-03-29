@@ -47,7 +47,7 @@
 /* ── Main Card ── */
 .pd-card {
   display: grid;
-  grid-template-columns: 680px 1fr 300px;
+  grid-template-columns: 500px 1fr 300px;
   gap: 32px;
   align-items: start;
   background: #fff;
@@ -247,6 +247,33 @@
   color: #e53935;
   border-color: #f5c2c2;
   background: #fffafa;
+}
+
+/* Share button overlay */
+.pd-share-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 50%;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.pd-share-btn:hover {
+  background: #f7fafa;
+  border-color: #adb1b8;
+  color: #111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* ══ INFO PANEL ══ */
@@ -822,30 +849,25 @@
   color: #555;
 }
 
-.bb-hr {
-  border: none;
-  border-top: 1px solid #eee;
-  margin: 12px 0;
-}
-
-/* Wish links */
+/* Wish links in Buy Box */
 .bb-links {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  margin-top: 12px;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
 }
 
 .bb-link {
   background: none;
-  border: none;
+  border: 0;
   color: #007185;
   font-size: 13px;
   cursor: pointer;
-  text-align: left;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0;
+  gap: 8px;
+  padding: 6px 0;
+  transition: color 0.15s;
+  width: 100%;
 }
 
 .bb-link:hover {
@@ -856,9 +878,17 @@
   color: #e53935;
 }
 
+.bb-link svg {
+  color: #999;
+}
+
+.bb-link.active svg {
+  color: #e53935;
+}
+
 /* ══ SKELETON ══ */
 .pd-card.skeleton-layout {
-  grid-template-columns: 680px 1fr 300px;
+  grid-template-columns: 500px 1fr 300px;
 }
 
 .sk-gallery {
@@ -920,14 +950,14 @@
 /* ══ RESPONSIVE ══ */
 @media (max-width: 1300px) {
   .pd-card {
-    grid-template-columns: 550px 1fr 280px;
+    grid-template-columns: 460px 1fr 280px;
     gap: 20px;
   }
 }
 
 @media (max-width: 1100px) {
   .pd-card {
-    grid-template-columns: 450px 1fr 260px;
+    grid-template-columns: 400px 1fr 260px;
     gap: 16px;
   }
 
