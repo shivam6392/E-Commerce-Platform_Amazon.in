@@ -23,8 +23,9 @@ const Register: React.FC = () => {
             loginUser(res.data);
             navigate('/');
         } catch (err: any) {
-            setError(err.response?.data?.error || 'Registration failed.');
+            setError(err.response?.data?.details || err.response?.data?.error || 'Registration failed.');
         } finally {
+
             setLoading(false);
         }
     };
