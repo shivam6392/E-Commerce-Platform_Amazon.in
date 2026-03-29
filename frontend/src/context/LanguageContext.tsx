@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
-import { translations, TranslationKey } from '../data/translations';
+import { translations } from '../data/translations';
+import type { TranslationKey } from '../data/translations';
+
 type Language = 'EN' | 'HI';
 
 interface LanguageContextType {
@@ -18,7 +20,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [country, setCountry] = useState<string>('India');
 
     const t = (key: TranslationKey): string => {
-        return translations[language][key] || translations['EN'][key] || key;
+        return (translations as any)[language]?.[key] || (translations as any)['EN']?.[key] || key;
     };
 
     return (
