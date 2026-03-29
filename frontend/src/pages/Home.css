@@ -589,14 +589,15 @@
 }
 
 .sidebar {
-  width: 230px;
+  width: 250px;
   flex-shrink: 0;
   background: #fff;
   border: 1px solid #d5d9d9;
   border-radius: 8px;
   overflow: hidden;
   position: sticky;
-  top: 150px;
+  top: 140px;
+  height: fit-content;
 }
 
 .sidebar-header {
@@ -964,16 +965,26 @@
 
 @media (max-width: 640px) {
   .hero-slider {
-    min-height: 260px;
+    min-height: 220px;
   }
 
   .hero-slide-content {
-    padding: 24px 44px;
+    padding: 20px;
     flex-direction: column;
+    text-align: center;
   }
 
   .hs-title {
-    font-size: 22px;
+    font-size: 20px;
+  }
+
+  .hs-sub {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .hs-ctas {
+    justify-content: center;
   }
 
   .hero-slide-img {
@@ -982,19 +993,28 @@
 
   .cat-cards-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .carousel-header {
+    padding: 0 16px 8px;
+  }
+
+  .carousel-track {
+    padding: 0 16px 12px;
   }
 
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
   }
 
   .listing-controls {
-    top: 80px;
-    padding: 8px 10px;
+    top: 70px;
+    padding: 8px;
   }
 
   .carousel-item {
-    width: 145px;
+    width: 140px;
   }
 }
