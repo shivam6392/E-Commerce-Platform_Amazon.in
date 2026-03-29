@@ -11,7 +11,7 @@ import {
   ShoppingCart, Zap, ChevronLeft, ChevronRight,
   Package2, RotateCcw, Shield, Truck, Tag,
   Heart, Share2, CheckCircle, AlertTriangle,
-  ChevronDown, ChevronUp, MapPin, Search, CreditCard
+  ChevronDown, ChevronUp, MapPin
 } from 'lucide-react';
 import './ProductDetail.css';
 
@@ -158,10 +158,10 @@ const ProductDetail: React.FC = () => {
                 <img
                   src={url}
                   alt=""
-                  onError={(e) => { 
+                  onError={(e) => {
                     const target = e.currentTarget as HTMLImageElement;
                     target.onerror = null;
-                    target.src = 'https://placehold.co/80x80/f5f5f5/aaa?text=IMG'; 
+                    target.src = 'https://placehold.co/80x80/f5f5f5/aaa?text=IMG';
                   }}
                 />
               </button>
@@ -170,11 +170,10 @@ const ProductDetail: React.FC = () => {
 
           {/* Main Image with Zoom */}
           <div className="pd-main-img-wrap">
-            {product.imageUrls.length > 1 && (
-              <button className="pd-nav prev" onClick={prevImg} aria-label="Previous image">
-                <ChevronLeft size={20} />
-              </button>
-            )}
+            {/* Share action at the top right of gallery area */}
+            <button className="pd-share-btn" onClick={() => navigator.share?.({ title: product.name, url: window.location.href }).catch(() => { })} title="Share product">
+              <Share2 size={20} />
+            </button>
 
             <div
               className={`pd-main-img-box ${zoom ? 'zoomed' : ''}`}
@@ -187,16 +186,16 @@ const ProductDetail: React.FC = () => {
                 src={product.imageUrls[activeImg]}
                 alt={product.name}
                 className="pd-main-img"
-                onError={(e) => { 
+                onError={(e) => {
                   const target = e.currentTarget as HTMLImageElement;
                   target.onerror = null;
-                  target.src = 'https://placehold.co/500x500/f5f5f5/aaa?text=Product'; 
+                  target.src = 'https://placehold.co/500x500/f5f5f5/aaa?text=Product';
                 }}
                 style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`, transform: 'scale(2)' } : {}}
                 draggable={false}
               />
               {!zoom && (
-                <div className="zoom-hint"><Search size={14} /> Hover to zoom</div>
+                <div className="zoom-hint">🔍 Hover to zoom</div>
               )}
             </div>
 
@@ -219,21 +218,6 @@ const ProductDetail: React.FC = () => {
                 ))}
               </div>
             )}
-          </div>
-
-          {/* Share + Wishlist under gallery */}
-          <div className="pd-gallery-actions">
-            <button
-              className={`pd-ga-btn ${wishlisted ? 'wishlisted' : ''}`}
-              onClick={toggleWishl}
-            >
-              <Heart size={16} fill={wishlisted ? '#e53935' : 'none'} color={wishlisted ? '#e53935' : 'currentColor'} />
-              {wishlisted ? 'Wishlisted' : 'Add to Wishlist'}
-            </button>
-            <button className="pd-ga-btn" onClick={() => navigator.share?.({ title: product.name, url: window.location.href }).catch(() => { })}>
-              <Share2 size={16} />
-              Share
-            </button>
           </div>
         </aside>
 
@@ -278,7 +262,7 @@ const ProductDetail: React.FC = () => {
             {/* EMI offer */}
             {price > 5000 && (
               <div className="pd-emi-offer">
-                <span className="emi-icon"><CreditCard size={16} /></span>
+                <span className="emi-icon">💳</span>
                 No Cost EMI available from ₹{formatINR(Math.round(price / 12))}/month
               </div>
             )}
@@ -423,9 +407,7 @@ const ProductDetail: React.FC = () => {
             )}
 
             {/* Cart success message */}
-            {cartState === 'added' && (
-              <div className="bb-added"><CheckCircle size={14} color="#007600" /> Added to Cart!</div>
-            )}
+            <div className="bb-added"><CheckCircle size={14} /> Added to Cart!</div>
 
             {/* Action Buttons */}
             <button
@@ -455,14 +437,14 @@ const ProductDetail: React.FC = () => {
 
             <hr className="bb-hr" />
 
-            {/* Share + Wishlist */}
+            {/* Share + Wishlist links */}
             <div className="bb-links">
               <button
                 className={`bb-link ${wishlisted ? 'active' : ''}`}
                 onClick={toggleWishl}
               >
-                <Heart size={14} fill={wishlisted ? '#e53935' : 'none'} color={wishlisted ? '#e53935' : 'currentColor'} />
-                {wishlisted ? 'Wishlisted' : 'Add to Wish List'}
+                <Heart size={16} fill={wishlisted ? '#e53935' : 'none'} />
+                {wishlisted ? 'Remove from Wishlist' : 'Add to Wish List'}
               </button>
             </div>
 
