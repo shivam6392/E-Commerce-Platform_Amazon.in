@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Wishlist from './pages/Wishlist';
 import { AuthProvider } from './context/AuthContext';
+import { WishlistProvider } from './context/WishlistContext';
 
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
@@ -108,7 +109,9 @@ const App: React.FC = () => {
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <AppRoutes />
+          <WishlistProvider>
+            <AppRoutes />
+          </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
