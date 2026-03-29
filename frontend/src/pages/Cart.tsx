@@ -1,12 +1,28 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { addToWishlist } from '../api';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import './Cart.css';
 
 const Cart: React.FC = () => {
   const { cart, updateItem, removeItem, loading } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
+
+  const handleSaveForLater = async (itemId: number, productId: number) => {
+    if (!user) {
+      alert("Please sign in to save items for later.");
+      return navigate('/login');
+    }
+    await removeItem(itemId);
+    try {
+      await addToWishlist({ userId: user.id, productId });
+    } catch (e) {
+      // It might already be in the wishlist, which is fine!
+    }
+  };
 
   const formatPrice = (p: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
@@ -70,7 +86,13 @@ const Cart: React.FC = () => {
                     <Trash2 size={14} /> Delete
                   </button>
                   <span className="action-sep">|</span>
-                  <button className="wishlist-btn">Save for later</button>
+                  <button 
+                    className="wishlist-btn" 
+                    onClick={() => handleSaveForLater(item.id, item.productId)}
+                    disabled={loading}
+                  >
+                    Save for later
+                  </button>
                 </div>
               </div>
               <div className="cart-item-price">
