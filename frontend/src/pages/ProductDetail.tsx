@@ -8,7 +8,7 @@ import { useWishlist } from '../context/WishlistContext';
 
 import { StarRating } from '../components/ProductCard';
 import {
-  ShoppingCart, Zap, ChevronLeft, ChevronRight,
+  ShoppingCart, Zap, ChevronRight,
   Package2, RotateCcw, Shield, Truck, Tag,
   Heart, Share2, CheckCircle, AlertTriangle,
   ChevronDown, ChevronUp, MapPin
@@ -108,7 +108,6 @@ const ProductDetail: React.FC = () => {
   };
 
   const nextImg = () => setActiveImg((i: number) => (i + 1) % product!.imageUrls.length);
-  const prevImg = () => setActiveImg((i: number) => (i - 1 + product!.imageUrls.length) % product!.imageUrls.length);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imgRef.current) return;
