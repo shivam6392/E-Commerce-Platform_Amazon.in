@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Search, SlidersHorizontal, X, TrendingUp, Zap } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, SlidersHorizontal, X, TrendingUp, Zap, Star, CheckCircle } from 'lucide-react';
 import { getProducts } from '../api';
 import type { Product } from '../types';
 import ProductCard from '../components/ProductCard';
@@ -8,13 +8,13 @@ import './Home.css';
 
 /* ── Constants ── */
 const CATEGORIES = [
-  { id: 'All', label: 'All Departments', icon: '🏪' },
-  { id: 'Electronics', label: 'Electronics', icon: '💻' },
-  { id: 'Clothing', label: 'Clothing & Fashion', icon: '👗' },
-  { id: 'Books', label: 'Books', icon: '📚' },
-  { id: 'Home & Kitchen', label: 'Home & Kitchen', icon: '🏠' },
-  { id: 'Sports', label: 'Sports & Outdoors', icon: '⚽' },
-  { id: 'Toys', label: 'Toys & Games', icon: '🎮' },
+  { id: 'All', label: 'All Departments' },
+  { id: 'Electronics', label: 'Electronics' },
+  { id: 'Clothing', label: 'Clothing & Fashion' },
+  { id: 'Books', label: 'Books' },
+  { id: 'Home & Kitchen', label: 'Home & Kitchen' },
+  { id: 'Sports', label: 'Sports & Outdoors' },
+  { id: 'Toys', label: 'Toys & Games' },
 ];
 
 const HERO_SLIDES = [
@@ -22,7 +22,7 @@ const HERO_SLIDES = [
     bg: 'linear-gradient(120deg,#0f2027,#203a43,#2c5364)',
     title: 'Mega Electronics Sale',
     subtitle: 'Up to 40% off on Laptops, Phones, TVs & More',
-    badge: "🔥 Today's Deal",
+    badge: "Today's Deal",
     accent: '#ff9900',
     cat: 'Electronics',
     img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&q=80',
@@ -31,7 +31,7 @@ const HERO_SLIDES = [
     bg: 'linear-gradient(120deg,#1a3a1a,#1e5128,#145a32)',
     title: 'Fashion Week Specials',
     subtitle: 'Discover latest trends · Min. 35% off',
-    badge: '✨ New Arrivals',
+    badge: 'New Arrivals',
     accent: '#a8ff78',
     cat: 'Clothing',
     img: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=80',
@@ -40,7 +40,7 @@ const HERO_SLIDES = [
     bg: 'linear-gradient(120deg,#3a0000,#7b1a1a,#a83232)',
     title: 'Home Makeover Sale',
     subtitle: 'Top quality Kitchen & Home essentials',
-    badge: '🏠 Home Picks',
+    badge: 'Home Picks',
     accent: '#ffcc80',
     cat: 'Home & Kitchen',
     img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80',
@@ -49,7 +49,7 @@ const HERO_SLIDES = [
     bg: 'linear-gradient(120deg,#1a0050,#360099,#5900cc)',
     title: 'Best Sellers in Books',
     subtitle: 'Bestselling titles · Starting ₹99',
-    badge: '📖 Reading List',
+    badge: 'Reading List',
     accent: '#c084fc',
     cat: 'Books',
     img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80',
@@ -380,9 +380,8 @@ const Home: React.FC = () => {
               {CATEGORIES.map((cat) => (
                 <li key={cat.id}>
                   <button className={`cat-item ${activeCategory === cat.id ? 'active' : ''}`} onClick={() => handleCategoryClick(cat.id)}>
-                    <span className="cat-icon">{cat.icon}</span>
                     <span className="cat-label">{cat.label}</span>
-                    {activeCategory === cat.id && <span className="cat-check">✓</span>}
+                    {activeCategory === cat.id && <span className="cat-check"><CheckCircle size={14} /></span>}
                   </button>
                 </li>
               ))}
@@ -393,7 +392,12 @@ const Home: React.FC = () => {
             <div className="rating-filters">
               {[4, 3, 2, 1].map((r) => (
                 <button key={r} className={`rating-filter-btn ${minRating === r ? 'active' : ''}`} onClick={() => setMinRating(minRating === r ? 0 : r)}>
-                  {'★'.repeat(r)}{'☆'.repeat(5 - r)} & Up
+                  <div className="rating-stars">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} size={14} fill={i < r ? "#ff9900" : "transparent"} color={i < r ? "#ff9900" : "#ccc"} />
+                    ))}
+                  </div>
+                  & Up
                 </button>
               ))}
             </div>
@@ -414,7 +418,7 @@ const Home: React.FC = () => {
           </button>
         </aside>
         {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
-
+ 
         <main className="products-main">
           {/* Active chips */}
           <div className="active-filters">
@@ -423,7 +427,7 @@ const Home: React.FC = () => {
             {minRating > 0 && <span className="filter-chip">{minRating}★ & Up<button onClick={() => setMinRating(0)}><X size={11} /></button></span>}
             {(priceRange[0] !== 0 || priceRange[1] !== 200000) && <span className="filter-chip">₹{priceRange[0].toLocaleString('en-IN')}–₹{priceRange[1].toLocaleString('en-IN')}<button onClick={() => setPriceRange([0, 200000])}><X size={11} /></button></span>}
           </div>
-
+ 
           {!loading && (
             <div className="section-title-row">
               {localSearch ? <><TrendingUp size={16} /><h2>Results for "<em>{localSearch}</em>"</h2></> :
@@ -431,12 +435,12 @@ const Home: React.FC = () => {
                   <><TrendingUp size={16} /><h2>All Products</h2></>}
             </div>
           )}
-
+ 
           {loading ? (
             <div className="products-grid">{Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}</div>
           ) : filtered.length === 0 ? (
             <div className="no-results">
-              <div className="no-results-icon">🔍</div>
+              <div className="no-results-icon"><Search size={48} /></div>
               <h2>No results found</h2>
               <p>Try adjusting your search or remove filters</p>
               <button className="no-results-btn" onClick={() => { clearSearch(); handleCategoryClick('All'); setMinRating(0); setPriceRange([0, 200000]); }}>Browse All Products</button>
