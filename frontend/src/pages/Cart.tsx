@@ -53,7 +53,11 @@ const Cart: React.FC = () => {
                 alt={item.product.name}
                 className="cart-item-img"
                 onClick={() => navigate(`/product/${item.product.id}`)}
-                onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/120?text=Product'; }}
+                onError={(e) => { 
+                  const target = e.currentTarget as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = 'https://placehold.co/120x120/f5f5f5/aaa?text=Product'; 
+                }}
               />
               <div className="cart-item-details">
                 <p className="cart-item-name" onClick={() => navigate(`/product/${item.product.id}`)}>
