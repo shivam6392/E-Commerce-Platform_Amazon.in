@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Star, StarHalf, ShoppingCart, Heart, Eye } from 'lucide-react';
+import { Star, StarHalf, ShoppingCart, Heart, Eye, CheckCircle } from 'lucide-react';
 import type { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -97,7 +97,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     )}
                     {isOutOfStock && <span className="badge badge-oos">Out of Stock</span>}
                     {product.rating >= 4.7 && !isOutOfStock && (
-                        <span className="badge badge-top">⭐ Top Rated</span>
+                        <span className="badge badge-top"><Star size={12} fill="#ff9900" color="#ff9900" /> Top Rated</span>
                     )}
                 </div>
 
@@ -154,7 +154,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     {isOutOfStock ? (
                         'Out of Stock'
                     ) : added ? (
-                        <>✔ Added to Cart</>
+                        <><CheckCircle size={14} /> Added to Cart</>
                     ) : (
                         <><ShoppingCart size={14} /> Add to Cart</>
                     )}
