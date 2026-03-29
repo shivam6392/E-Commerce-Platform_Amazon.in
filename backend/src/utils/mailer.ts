@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 export const sendOrderConfirmationEmail = async (userEmail: string, userName: string, orderDetails: any) => {
     try {
         if (!process.env.RESEND_API_KEY) {
-            console.error('❌ Missing RESEND_API_KEY in environment variables.');
+            console.error(' Missing RESEND_API_KEY in environment variables.');
             return;
         }
 
@@ -83,11 +83,11 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
         });
 
         if (error) {
-            console.error('❌ Resend API Error:', error);
+            console.error(' Resend API Error:', error);
             return;
         }
 
-        console.log('✅ 📧 Order Email Sent successfully via Resend API!', data);
+        console.log(' Order Email Sent successfully via Resend API!', data);
         
     } catch (error) {
         console.error('❌ Failed to send email confirmation via Resend:', error);
