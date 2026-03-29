@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProduct, getWishlist, addToWishlist, removeFromWishlist } from '../api';
+import { getProduct } from '../api';
 import type { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useWishlist } from '../context/WishlistContext';
 
 import { StarRating } from '../components/ProductCard';
 import {
@@ -61,8 +62,10 @@ const ProductDetail: React.FC = () => {
   const [activeImg, setActiveImg] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [cartState, setCartState] = useState<'idle' | 'adding' | 'added'>('idle');
-  const [wishlisted, setWishlisted] = useState(false);
-  const [wishlistItemId, setWishlistItemId] = useState<number | null>(null);
+
+  // Wishlist state from global context
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const wishlisted = product ? isWishlisted(product.id) : false;
 
   const [descExpanded, setDescExpanded] = useState(false);
   const [zoom, setZoom] = useState(false);
@@ -82,18 +85,8 @@ const ProductDetail: React.FC = () => {
           setActiveImg(0);
         })
         .catch(() => navigate('/'));
-
-      if (user && id) {
-        getWishlist(user.id).then(res => {
-          const item = res.data.find((i: any) => i.productId === Number(id));
-          if (item) {
-            setWishlisted(true);
-            setWishlistItemId(item.id);
-          }
-        });
-      }
     }
-  }, [id, user]);
+  }, [id]);
 
   const handleAddToCart = async () => {
     if (cartState !== 'idle') return;
@@ -108,23 +101,10 @@ const ProductDetail: React.FC = () => {
     navigate('/cart');
   };
 
-  const toggleWishlist = async () => {
+  const toggleWishl = async () => {
     if (!user) return navigate('/login', { state: { from: { pathname: `/product/${id}` } } });
     if (!product) return;
-    
-    try {
-      if (wishlisted && wishlistItemId) {
-        await removeFromWishlist(wishlistItemId);
-        setWishlisted(false);
-        setWishlistItemId(null);
-      } else {
-        const res = await addToWishlist({ userId: user.id, productId: product.id });
-        setWishlisted(true);
-        setWishlistItemId(res.data.id);
-      }
-    } catch (err) {
-      console.error('Wishlist action failed', err);
-    }
+    await toggleWishlist(product.id);
   };
 
   const nextImg = () => setActiveImg((i) => (i + 1) % product!.imageUrls.length);
@@ -245,7 +225,7 @@ const ProductDetail: React.FC = () => {
           <div className="pd-gallery-actions">
             <button
               className={`pd-ga-btn ${wishlisted ? 'wishlisted' : ''}`}
-              onClick={toggleWishlist}
+              onClick={toggleWishl}
             >
               <Heart size={16} fill={wishlisted ? '#e53935' : 'none'} color={wishlisted ? '#e53935' : 'currentColor'} />
               {wishlisted ? 'Wishlisted' : 'Add to Wishlist'}
@@ -479,7 +459,7 @@ const ProductDetail: React.FC = () => {
             <div className="bb-links">
               <button
                 className={`bb-link ${wishlisted ? 'active' : ''}`}
-                onClick={toggleWishlist}
+                onClick={toggleWishl}
               >
                 <Heart size={14} fill={wishlisted ? '#e53935' : 'none'} color={wishlisted ? '#e53935' : 'currentColor'} />
                 {wishlisted ? 'Wishlisted' : 'Add to Wish List'}
