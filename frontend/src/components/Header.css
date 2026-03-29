@@ -36,25 +36,32 @@
   border-color: #fff;
 }
 
+.logo-text-wrapper {
+  display: flex;
+  align-items: flex-end;
+}
+
 .logo-text {
   color: #fff;
-  font-size: 20px;
-  font-weight: 900;
+  font-size: 22px;
+  font-weight: 700;
   letter-spacing: -0.5px;
-  line-height: 1;
+  line-height: 0.9;
 }
 
 .logo-in {
-  color: #ff9900;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
-  margin-top: 1px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 0.9;
+  margin-left: 2px;
+  padding-bottom: 2px;
 }
 
 .logo-smile {
-  width: 48px;
-  margin-top: -2px;
+  width: 54px;
+  margin-top: -1px;
+  margin-left: 2px;
 }
 
 /* Deliver */
