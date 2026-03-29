@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { getOrders } from '../api';
+import { useAuth } from '../context/AuthContext';
 import type { Order } from '../types';
 import './Orders.css';
 
 const Orders: React.FC = () => {
+  const { user, loading: authLoading } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getOrders()
-      .then((res) => setOrders(res.data))
-      .finally(() => setLoading(false));
-  }, []);
+    if (user) {
+      getOrders()
+        .then((res) => setOrders(res.data))
+        .catch(() => setOrders([]))
+        .finally(() => setLoading(false));
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [user, authLoading]);
 
   const formatOrderId = (id: number) => {
     const hash = id * 314159;
@@ -25,7 +32,11 @@ const Orders: React.FC = () => {
   const formatPrice = (p: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
 
-  if (loading) return <div className="orders-loading">Loading your orders...</div>;
+  if (authLoading || (loading && user)) return <div className="orders-loading">Loading your orders...</div>;
+
+  if (!user && !authLoading) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="orders-page">
