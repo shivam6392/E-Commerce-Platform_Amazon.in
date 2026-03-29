@@ -7,6 +7,8 @@ import orderRoutes from './routes/orders';
 import authRoutes from './routes/auth';
 import wishlistRoutes from './routes/wishlist';
 import { autoSeedIfEmpty } from './autoSeed';
+import { execSync } from 'child_process';
+
 
 dotenv.config();
 
@@ -43,11 +45,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
 
-// Auto-seed on startup (free tier friendly — no Shell access needed)
+// Auto-seed and Migration on startup (free tier friendly — no Shell access needed)
 (async () => {
+    try {
+        console.log('🔄 Running database migrations...');
+        execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+        console.log('✅ Migrations completed.');
+    } catch (err) {
+        console.error('❌ Migration failed:', err);
+    }
+
     await autoSeedIfEmpty();
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
 })();
+
 
