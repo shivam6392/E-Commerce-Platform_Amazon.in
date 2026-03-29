@@ -83,12 +83,19 @@ export const sendOrderConfirmationEmail = async (userEmail: string, userName: st
         });
 
         if (error) {
-            console.error(' Resend API Error:', error);
+            // SPECIFIC CHECK FOR RESEND FREE TIER RESTRICTION
+            // Error code 403 or specific message usually indicates unverified recipient on free tier
+            if (error.name === 'resend_error' && (error as any).status === 403) {
+                console.error('❌ RESEND ERROR: You are on the Free Tier and trying to send to an unverified email address.');
+                console.error(`   To send to ${userEmail}, you must verify your domain in the Resend dashboard.`);
+            } else {
+                console.error(' Resend API Error:', error);
+            }
             return;
         }
 
         console.log(' Order Email Sent successfully via Resend API!', data);
-        
+
     } catch (error) {
         console.error('❌ Failed to send email confirmation via Resend:', error);
     }
